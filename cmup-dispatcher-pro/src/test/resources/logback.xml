@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration debug="false">
+	<contextName>UPAY</contextName>
+	<property resource="config.properties" />
+	<property name="log.base" value="/opt/upay3/apps/logs"/>
+	<property name="instance.id" value="dispatcher"/>
+<!-- 系统运行日志记录文件begin -->
+	<appender name="SYSTEM_APPENDER_ROOT" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>${log.base}/${instance.id}/%d{yyyy-MM-dd}/${HOSTNAME}_${app.ip}_${app.port}/info.log.%d{yyyy-MM-dd}.%i</fileNamePattern>
+			<timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+				<maxFileSize>200MB</maxFileSize>
+			</timeBasedFileNamingAndTriggeringPolicy>
+			<!-- 超过31天的日志，会自动删除 -->
+			<maxHistory>31</maxHistory>
+		</rollingPolicy>
+		<encoder>
+			<pattern>%msg%n</pattern>
+			<charset>UTF-8</charset>
+		</encoder>
+	</appender>
+	<!-- 系统运行日志记录文件end -->
+
+	<!-- 告警日志记录文件（包含WARN和ERROR级别）begin -->
+	<appender name="ALARM_APPENDER_ROOT" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>${log.base}/alarm/${HOSTNAME}_${app.ip}_${app.port}/alarm.log.%d{yyyy-MM-dd}</fileNamePattern>
+			<!-- 超过7天的日志，会自动删除 -->
+			<maxHistory>7</maxHistory>
+		</rollingPolicy>
+		<encoder>
+			<pattern>%msg%n</pattern>
+			<!--  日志规范要求为GBK编码 -->
+			<charset>GBK</charset>
+		</encoder>
+	</appender>
+	<!-- 告警日志记录文件（包含WARN和ERROR级别）end -->
+	
+	<!-- 流程引擎日志记录文件begin -->
+	<appender name="AUTOFLOW_APPENDER_ROOT" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>${log.base}/${instance.id}/%d{yyyy-MM-dd}/${HOSTNAME}_${app.ip}_${app.port}/autoFlow.log.%d{yyyy-MM-dd}.%i</fileNamePattern>
+			<timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+				<maxFileSize>200MB</maxFileSize>
+			</timeBasedFileNamingAndTriggeringPolicy>
+			<!-- 超过31天的日志，会自动删除 -->
+			<maxHistory>31</maxHistory>
+		</rollingPolicy>
+		<encoder>
+			<pattern>BL##%d{yyyy-MM-dd HH:mm:ss.SSS}#%c[%L]#%level#%msg##LB%n</pattern>
+			<charset>UTF-8</charset>
+		</encoder>
+	</appender>
+	<!-- 流程引擎日志记录文件end -->
+	
+	<logger name="com.cmsz.cmup.commons.logging.system" additivity="true" level="DEBUG">
+		<appender-ref ref="SYSTEM_APPENDER_ROOT" />
+	</logger>
+	<logger name="com.cmsz.cmup.commons.logging.alarm" additivity="true" level="DEBUG">
+		<appender-ref ref="ALARM_APPENDER_ROOT" />
+	</logger>
+	
+	<!-- 工作流日志 -->
+	<logger name="cmsz.autoflow" additivity="true" level="DEBUG">
+		<appender-ref ref="AUTOFLOW_APPENDER_ROOT" />
+	</logger>
+
+	<!-- 打印mybatis sql，需要打开控制台打印日志，并且level="DEBUG"时才会显示sql -->
+	<logger name="java.sql.Connection" level="DEBUG" />
+	<logger name="java.sql.PreparedStatement" level="DEBUG" />
+	 
+	<!--控制台打印日志 start -->
+	<!--上生产请注释掉 -->
+	<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+		<encoder>
+			<pattern>%msg%n</pattern>
+		</encoder>
+	</appender>
+	<root level="DEBUG">
+		<appender-ref ref="STDOUT" />
+	</root>
+	<!--控制台打印日志 end -->
+</configuration>

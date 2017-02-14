@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--在线计费业务，月结算流测试流程，生产环境或测试环境使用；-->
+<process id="Proc_Settle_Month_ZXJF" name="Proc_Settle_Month_ZXJF">
+    <!-- 流程开始 -->
+    <start name="start">
+        <transition to="unReDoZxjfMonthSettlementSuccessfulFlow" />
+    </start>
+    
+  <!-- step0：咪咕在线计费月结算流程是否已经成功执行过了，执行过了就不执行 -->
+	<task name="unReDoZxjfMonthSettlementSuccessfulFlow" refdubbo="MgzxjfDubboService"
+		refcomponent="UnReDoZxjfMonthSettlementSuccessfulFlowService">
+		<transition to="ZXJFMonthSettleInitial" />
+	</task>
+
+<!-- step1.月结算初始化：当该月完成核减流程之后，依次对所有省份进行月结算-->
+    <task name="ZXJFMonthSettleInitial" refdubbo="MgzxjfDubboService"
+        refcomponent="ZXJFMonthSettleInitService">
+        <transition to="ZXJFMonthSettlement" />
+    </task>
+
+    <!-- step2.月结算：依次对所有省份进行月结算-->
+    <task name="ZXJFMonthSettlement" refdubbo="MgzxjfDubboService"
+        refcomponent="ZXJFMonthSettleService">
+        <transition to="end" />
+    </task>
+
+    <!-- 流程结束 -->
+    <end name="end" />
+</process>

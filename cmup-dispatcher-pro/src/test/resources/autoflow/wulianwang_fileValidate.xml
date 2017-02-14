@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 物联网解析入库流程，仅供测试 -->
+<process id="wulianwang_fileValidate" name="wulianwang_fileValidate">
+	<!-- 流程开始 -->
+	<start name="start">
+		<transition to="grabIotFile"/>
+	</start>
+	
+	<!-- step1.1： 物联网文件，校验入库 -->
+	<task name="grabIotFile" refdubbo = "ProDubboService"
+		refcomponent = "fileHandleService">
+		<field key="serviceID" value="serviceID-20160729-719931" />
+		<transition to = "grabAlipayFile"/>
+	</task>
+	
+	<!-- step1.2： 支付宝文件，校验入库 -->
+	<task name="grabAlipayFile" refdubbo = "ProDubboService"
+		refcomponent = "fileHandleService">
+		<field key="serviceID" value="serviceID-20160729-719933" />
+		<transition to = "end"/>
+	</task>	
+	
+	
+	<!-- 流程结束 -->
+	<end name="end"/>
+</process>

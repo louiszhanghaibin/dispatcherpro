@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:task="http://www.springframework.org/schema/task"
+	xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+		http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+		http://www.springframework.org/schema/context
+		http://www.springframework.org/schema/context/spring-context-3.0.xsd
+		http://www.springframework.org/schema/task
+		http://www.springframework.org/schema/task/spring-task-3.1.xsd
+		">
+	<!-- 密码加解密处理，需要加密的property，key请用.encrypt结尾，并且isEncry.isEncryable=true时，才执行解密操作 -->
+	<!-- 使用spring注入属性值（@Value），即为解密后的属性值 。不需要额外处理-->
+	<bean id="encrypPropertyConfigurer"
+		class="com.cmsz.cmup.commons.utils.EncryptablePropertyPlaceholderConfigurer">
+		<property name="locations">
+			<list>
+				<value>classpath:config.properties</value>
+			</list>
+		</property>
+	</bean>
+	<!-- 引入属性文件 -->
+	<context:property-placeholder location="classpath:config.properties" />
+
+	<!-- 自动扫描(自动注入) -->
+	<context:component-scan base-package="com.cmsz.cmup" /> 
+	
+	<!-- 配置文件引入 -->
+	<import resource="spring-myBatis.xml"/>
+	<import resource="spring-autoflow.xml"/>
+	<import resource="spring-mvc-controller.xml"/>
+	<import resource="spring-datasource.xml"/>
+	<import resource="spring-dubbo-customer.xml"/>
+	<!-- 采用注释的方式配置bean -->
+	<context:annotation-config />
+	<!-- 该 BeanPostProcessor 将自动起作用，对标注 @Autowired 的 Bean 进行自动注入 -->
+	<bean class="org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor" />
+
+</beans>

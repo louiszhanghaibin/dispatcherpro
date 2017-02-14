@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--咪咕充值业务，日稽核流程测试流程，生产环境或测试环境使用；-->
+<process id="Proc_Settle_Day_Migu" name="Proc_Settle_Day_Migu">
+    <!-- 流程开始 -->
+    <start name="start">
+        <transition to="UnReDoDaySettlementSuccessfulFlow" />
+    </start>
+
+    <!-- 判断流程是否可以执行-->
+    <task name="UnReDoDaySettlementSuccessfulFlow" refdubbo="ClearingDubboService"
+          refcomponent="UnReDoDaySettlementSuccessfulFlowService">
+        <transition to="MGSettleByDayInit" />
+    </task>
+
+    <!-- 日稽核初始化-->
+    <task name="MGSettleByDayInit" refdubbo="ClearingDubboService"
+          refcomponent="MGSettleByDayInitService">
+        <transition to="grabMGAlipayBalanceFile"/>
+    </task>
+
+    <!-- 第三方支付余额文件入库-->
+    <task name="grabMGAlipayBalanceFile" refdubbo="ClearingDubboService"
+          refcomponent="mGAlipayBalanceService">
+        <transition to="settlementByDay"/>
+    </task>
+
+    <!-- 日结算：当日所有省完成对账流程之后，依次对所有省份进行日结算-->
+    <task name="settlementByDay" refdubbo="ClearingDubboService"
+          refcomponent="MGSettlementByDayService">
+        <transition to="auditByDay"/>
+    </task>
+
+    <!-- 日稽核 ：当日结算完成之后，对所有省份的总金额进行稽核-->
+    <task name="auditByDay" refdubbo="ClearingDubboService"
+          refcomponent="MGAuditByDayService">
+        <transition to="end"/>
+    </task>
+
+    <!-- 流程结束 -->
+    <end name="end" />
+
+</process>

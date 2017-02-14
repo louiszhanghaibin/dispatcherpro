@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 物联网支付业务，月结算流程，生产环境使用 -->
+<process id="Proc_Month_Settlement_IOT" name="Proc_Month_Settlement_IOT">
+	<!-- 流程开始 -->
+	<start name="start">
+		<transition to="unReDoIotMonthSettleSuccessfulFlow"/>
+	</start>
+	
+	<!-- step0：物联网月结算流程是否已经成功执行过了，执行过了就不执行 -->
+	<task name="unReDoIotMonthSettleSuccessfulFlow" refdubbo="ProDubboService" refcomponent="unReDoSuccessfulFlowService">
+		<field key="processId" value="Proc_Month_Settlement_IOT"/>
+        <field key="flowDescKey" value="物联网业务月结算"/>
+		<transition to="initialSettleResultData" />
+	</task>
+	
+	<!-- step1：物联网月结算流程初始化 -->
+	<task name="initialSettleResultData" refdubbo="ProDubboService" refcomponent="callProcedureDataOutputService">
+		<field key="stepID" value="STEP_0070_MON_SETTLE_INIT"/>
+		<field key="daySettleId" value="Proc_Day_Settlement_IOT"/>
+		<transition to="monthSettlement" />
+	</task>
+	
+	<!-- step2：物联网月结算步骤执行 -->
+	<task name="monthSettlement" refdubbo="ProDubboService" refcomponent="callOnlyInParamsProcedureService">
+		<field key="stepID" value="STEP_0070_MON_SETTLE"/>
+		<field key="taxRate" value="0.06"/>
+		<transition to="end" />
+	</task>
+	
+	<!-- 流程结束 -->
+	<end name="end"/>
+</process>

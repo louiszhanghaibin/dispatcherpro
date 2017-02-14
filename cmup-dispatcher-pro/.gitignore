@@ -1,0 +1,20 @@
+# Operating System Files  
+
+*.DS_Store
+Thumbs.db
+
+# eclipse specific git ignore
+*.pydevproject
+.metadata
+# External tool builders
+.externalToolBuilders/
+# Locally stored "Eclipse launch configurations"
+*.launch
+
+
+build/
+target/
+bin/
+
+# Java class files
+*.class

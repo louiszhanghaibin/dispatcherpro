@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 能力开放平台业务，仅做对账测试环境使用； -->
+<process id="Proc_Account_CMOSP" name="Proc_Account_CMOSP">
+	<!-- 流程开始 -->
+	<start name="start">
+		<transition to="unReDoOspAccountSuccessfulFlow"/>
+	</start>
+	
+	<!-- step0: 能力开放平台对账流程是否已成功执行过，执行过了就不执行 -->
+	<task name="unReDoOspAccountSuccessfulFlow" refdubbo="OspDubboService"
+		refcomponent="UnReDoBusiAccountSuccessfulFlowService">
+		<transition to="initialAccountResultData"/>
+	</task>
+	
+	<!-- step1.1： 获取能力开放平台T日全量文件，并校验入库 -->
+	<task name="grabCMOSPOspFile" refdubbo = "OspDubboService"
+		refcomponent = "cmospSettleService">
+		<transition to = "grabCMOSPAlipayFile"/>
+	</task>
+	
+	<!-- step1.2： 获取支付宝T日全量文件，并校验入库 -->
+	<task name="grabCMOSPAlipayFile" refdubbo = "OspDubboService"
+		refcomponent = "cmospAlipayService">
+		<transition to = "initialAccountResultData"/>
+	</task>	
+	
+	<!-- step2： 对账流程数据初始化 -->
+	<task name="initialAccountResultData" refdubbo="OspDubboService"
+		refcomponent="OspBusiAccountInitialService">
+		<transition to="checkOspAlipayAccount"/>
+	</task>
+	
+	<!-- step3:能力开放平台T日数据与支付宝T日数据对账 -->
+	<task name="checkOspAlipayAccount" refdubbo="OspDubboService"
+		refcomponent="OspCheckOspAliPayAccountService">
+		<transition to="exportOspFile"/>
+	</task>
+	
+	<!-- step4:导出能力开放平台差异文件 -->
+	<task name="exportOspFile" refdubbo="OspDubboService"
+		refcomponent="OspBusiDiffFileExportingService">
+		<transition to="end"/>
+	</task>
+	
+	<!-- 流程结束 -->
+	<end name="end"/>
+</process>

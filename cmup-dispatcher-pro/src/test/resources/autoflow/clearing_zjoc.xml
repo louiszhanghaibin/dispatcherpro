@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--能力开放平台，文件校验入库流程，仅仅用作测试流程使用-->
+<process id="Proc_Clearing_ZJOC" name="Proc_Clearing_ZJOC">
+	<!-- 流程开始 -->
+	<start name="start">
+		<transition to="unReDoZJOCAccountSuccessfulFlow" />
+	</start>
+
+	<!-- step0: 能力开放平台-浙商运营中心对账流程是否已成功执行过，执行过了就不执行 -->
+	<task name="unReDoZJOCAccountSuccessfulFlow" refdubbo="OspDubboService"
+		refcomponent="UnReDoZjocAccountSuccessfulFlowService">
+		<transition to="fileValidate"/>
+	</task>
+	
+	<!-- step1：校验文件并入库 -->
+	<fork name="fileValidate">
+		<transition to="cmospFileValidate" />
+		<transition to="zjocFileValidate" />
+	</fork>
+
+	<!-- step1.1：校验能力开放平台对账文件 -->
+	<task name="cmospFileValidate" refdubbo="OspDubboService"
+		refcomponent="cmospSettleService">
+		<field key="busiLine" value="0069"></field>
+		<transition to="grabFilesJoin" />
+	</task>
+	
+	<!-- step1.2：校验浙商对账文件 -->
+	<task name="zjocFileValidate" refdubbo="OspDubboService"
+		refcomponent="cmospZjocService">
+		<transition to="grabFilesJoin" />
+	</task>
+
+	<!-- 等待对账原始文件入库 -->
+	<join name="grabFilesJoin">
+		<transition to="initialAccountResultData" />
+	</join>
+	
+	<!-- step2： 对账流程数据初始化 -->
+	<task name="initialAccountResultData" refdubbo="OspDubboService"
+		refcomponent="OspZjocAccountInitialService">
+		<transition to="checkZjocAlipayAccount"/>
+	</task>
+	
+	<!-- step3:能力开放平台T日数据与浙商运营中心数据对账 -->
+	<task name="checkZjocAlipayAccount" refdubbo="OspDubboService"
+		refcomponent="OspCheckOspZjocAccountService">
+		<transition to="exportZjocFile"/>
+	</task>
+	
+	<!-- step4:导出能力开放平台差异文件 -->
+	<task name="exportZjocFile" refdubbo="OspDubboService"
+		refcomponent="OspZjocDiffFileExportingService">
+		<transition to="end"/>
+	</task>
+
+	<!-- 流程结束 -->
+	<end name="end" />
+
+</process>

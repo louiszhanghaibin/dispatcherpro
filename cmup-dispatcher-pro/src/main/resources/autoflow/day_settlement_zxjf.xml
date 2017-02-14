@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--在线计费业务，日结算流程测试流程，生产环境或测试环境使用；-->
+<process id="Proc_Settle_Day_ZXJF" name="Proc_Settle_Day_ZXJF">
+    <!-- 流程开始 -->
+    <start name="start">
+        <transition to="unReDoZxjfDaySettlementSuccessfulFlow" />
+    </start>
+    
+   <!-- step0：咪咕在线计费日结算流程是否已经成功执行过了，执行过了就不执行 -->
+	<task name="unReDoZxjfDaySettlementSuccessfulFlow" refdubbo="MgzxjfDubboService"
+		refcomponent="UnReDoZxjfDaySettlementSuccessfulFlowService">
+		<transition to="ZXJFDaySettleInitial" />
+	</task>
+
+    <!-- step1.日结算：当日所有省完成对账流程之后，依次对所有省份进行日结算-->
+    <task name="ZXJFDaySettleInitial" refdubbo="MgzxjfDubboService"
+        refcomponent="ZXJFDaySettleInitService">
+        <transition to="ZXJFDaySettlement" />
+    </task>
+
+    <!-- step2.日结算：当日所有省完成对账流程之后，依次对所有省份进行日结算-->
+    <task name="ZXJFDaySettlement" refdubbo="MgzxjfDubboService"
+        refcomponent="ZXJFDaySettleService">
+        <transition to="end" />
+    </task>
+
+    <!-- 流程结束 -->
+    <end name="end" />
+</process>

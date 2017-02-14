@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 配置每个业务线对应的应用名称，告警日志使用 ,考虑到前置不能访问数据库，所以用ｘｍｌ配置-->
+<busiLines>
+	<busiLine>
+		<code>0051</code>
+		<app>
+			<name>UPAY</name>
+		</app>
+	</busiLine>
+	<busiLine>
+		<code>0062</code>
+		<app>
+			<name>UPAY</name>
+		</app>
+	</busiLine>
+	<busiLine>
+		<code>0064</code>
+		<app>
+			<name>UPAY</name>
+		</app>
+	</busiLine>
+	<busiLine>
+		<code>0065</code>
+		<app>
+			<name>UPAY</name>
+		</app>
+	</busiLine>
+	<busiLine>
+		<code>0068</code>
+		<app>
+			<name>ZXJF</name>
+		</app>
+	</busiLine>
+	<busiLine>
+		<code>0069</code>
+		<app>
+			<name>UPAY</name>
+		</app>
+	</busiLine>
+	<busiLine>
+		<code>0069_251</code>
+		<app>
+			<name>UPAY</name>
+		</app>
+	</busiLine>
+	<busiLine>
+		<code>0070</code>
+		<app>
+			<name>UPAY</name>
+		</app>
+	</busiLine>
+</busiLines>

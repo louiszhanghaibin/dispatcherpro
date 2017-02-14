@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:task="http://www.springframework.org/schema/task"
+	xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+		http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+		http://www.springframework.org/schema/context
+		http://www.springframework.org/schema/context/spring-context-3.0.xsd
+		http://www.springframework.org/schema/task
+		http://www.springframework.org/schema/task/spring-task-3.1.xsd
+		">
+	
+	<!-- 配置mybitasSqlSessionFactoryBean -->
+	<bean id="AutoFlowSqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<property name="configLocation" value="classpath:mybatis-autoflow.xml"></property>
+	</bean>
+	
+	
+	<bean id="configbean"	class="cmsz.autoflow.engine.cfg.SupportSpringConfiguration" />
+	
+	<bean id="engine" factory-bean="configbean"
+		factory-method="buildAutoEngine" />
+		
+	<bean id="processXMLFileLoader" class="cmsz.autoflow.engine.cfg.ProcessXMLFileLoader"	init-method="load">
+		<!-- override 为true，程序启动时会自动覆盖数据库中以后的记录 -->
+		<property name="override" value="true"/>
+		<property name="files">
+			<list>
+				<!-- 需要部署的流程定义文件 运行的业务不同，需要部署的流程定义文件也不同-->
+				<!-- 咪咕充值业务-->
+				<value>autoflow/clearing_migu.xml</value>
+                <value>autoflow/day_settlement_audit_migu.xml</value>
+                <value>autoflow/mouth_settlement_audit_migu.xml</value>
+				<!-- 以zxjf结尾的为在线计费业务-->
+				<value>autoflow/clearing_zxjf.xml</value>
+                <value>autoflow/subtraction_zxjf.xml</value>
+                <value>autoflow/day_settlement_zxjf.xml</value>
+                <value>autoflow/month_settlement_zxjf.xml</value>
+                <!-- 互联网返利-->
+                <value>autoflow/clearing_mm.xml</value>
+                <value>autoflow/month_settlement_mm.xml</value>
+                <value>autoflow/writeOff_mm.xml</value>
+                <value>autoflow/receipt_mc.xml</value>
+                <!-- 能力开放平台 -->
+                <value>autoflow/clearing_cmosp.xml</value>
+                <value>autoflow/ser_fee_calculate_osp.xml</value>
+                <value>autoflow/ser_fee_mon_settlement_osp.xml</value>
+                <!-- 能力开放平台浙商中心 -->
+                <value>autoflow/clearing_zjoc.xml</value>
+
+                <!-- 物联网 -->
+                <value>autoflow/clearing_iot.xml</value>
+                <value>autoflow/day_settlement_iot.xml</value>
+                <value>autoflow/month_settlement_iot.xml</value>
+                
+                <!-- 微信 -->
+                <value>autoflow/clearing_wecpay.xml</value>
+			</list>
+		</property>
+	</bean>
+	
+	<bean id="scheduler" class="cmsz.autoflow.engine.schedule.PlanScheduler" init-method="start">
+		<property name="engine"	ref="engine" />
+	</bean>
+	
+		
+	
+</beans>

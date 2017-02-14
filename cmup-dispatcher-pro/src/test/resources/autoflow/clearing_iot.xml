@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--物联网业务，对账流程，生产环境使用；-->
+<process id="Proc_Clearing_IOT" name="Proc_Clearing_IOT">
+	<!-- 流程开始 -->
+	<start name="start">
+		<transition to="unReDoIotAccountSuccessfulFlow" />
+	</start>
+
+	<!-- step0：物联网对账流程是否已经成功执行过了，执行过了就不执行 -->
+	<task name="unReDoIotAccountSuccessfulFlow" refdubbo="ProDubboService" refcomponent="unReDoSuccessfulFlowService">
+		<field key="processId" value="Proc_Clearing_IOT"/>
+        <field key="flowDescKey" value="物联网业务对账"/>
+		<transition to="initialAccountResultData" />
+	</task>
+
+	<!-- step1.1： 物联网文件，校验入库 -->
+	<task name="grabIotFile" refdubbo = "ProDubboService"  refcomponent = "fileHandleService">
+		<field key="serviceID" value="serviceID-20160729-719931" />
+		<transition to = "grabAlipayFile"/>
+	</task>
+
+	<!-- step1.2： 支付宝文件，校验入库 -->
+	<task name="grabAlipayFile" refdubbo = "ProDubboService" refcomponent = "fileHandleService">
+		<field key="serviceID" value="serviceID-20160729-719933" />
+		<transition to = "initialAccountResultData"/>
+	</task>	
+
+	<!-- step2：对账流程数据初始化 -->
+	<task name="initialAccountResultData" refdubbo="ProDubboService" refcomponent="callOnlyInParamsProcedureService">
+		<field key="stepID" value="STEP_0070_ACC_INIT"/>
+		<transition to="checkIotAndAlipayAccount" />
+	</task>
+	
+	<!-- step3：调用对账存储过程 -->
+	<task name="checkIotAndAlipayAccount" refdubbo="ProDubboService" refcomponent="callOnlyInParamsProcedureService">
+		<field key="stepID" value="STEP_0070_ACC"/>
+ 		<transition to="exportIotDiffFile" />
+	</task>
+
+	<!-- step4：导出差异文件 -->
+	<task name="exportIotDiffFile" refdubbo="ProDubboService" refcomponent="fileExportService">
+	    <field key="FILE_EXPORT_ID" value="FILE_0070_ACC_01"/>
+		<transition to="end" />
+	</task>
+
+
+	<!-- 流程结束 -->
+	<end name="end" />
+
+</process>
