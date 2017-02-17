@@ -1,114 +1,92 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--咪咕充值业务，对账流程测试流程，生产环境使用；-->
+<!--咪咕充值业务，对账流程流程，生产环境使用； -->
 <process id="Proc_Clearing_Migu" name="Proc_Clearing_Migu">
 	<!-- 流程开始 -->
 	<start name="start">
 		<transition to="UnReDoMiguAccountSuccessfulFlow" />
 	</start>
 
-    <!-- 判断账期日流程是否被成功执行过 -->
-    <task name="UnReDoMiguAccountSuccessfulFlow" refdubbo="ClearingDubboService"
-          refcomponent="UnReDoMiguAccountSuccessfulFlowService">
-        <transition to="grabFilesFork" />
-    </task>
-
-	<!-- step1：获取对账文件 -->
-	<fork name="grabFilesFork">
+	<!-- step1: 判断账期日流程是否被成功执行过，执行过了就不执行 -->
+	<task name="UnReDoMiguAccountSuccessfulFlow" refdubbo="ProDubboService"	refcomponent="unReDoSuccessfulFlowService">
+		<field key="processId" value="Proc_Clearing_Migu" />
+		<field key="flowDescKey" value="咪咕业务对账" />
 		<transition to="grabMGAlipayFile" />
+	</task>
+
+	<!-- step2.1：获取第三方支付T日全量文件，并校验入库 -->
+	<task name="grabMGAlipayFile" refdubbo="ProDubboService" refcomponent="fileHandleService">
+		<field key="serviceID" value="serviceID-20170209-163427" />    
 		<transition to="grabMGUpayFile" />
+	</task>
+	<!-- step2.2：获取统一T日全量文件，并校验入库 -->
+	<task name="grabMGUpayFile" refdubbo="ProDubboService" refcomponent="fileHandleService">
+		<field key="serviceID" value="serviceID-20170209-904885" />
 		<transition to="grabMGMiguFile" />
+	</task>
+
+	<!-- step2.3：获取咪咕T日全量文件，并校验入库 -->
+	<task name="grabMGMiguFile" refdubbo="ProDubboService" refcomponent="fileHandleService">
+		<field key="serviceID" value="serviceID-20170209-355239" />
 		<transition to="grabMGBossFile" />
-	</fork>
-
-	<!-- step1.1：获取第三方支付T日全量文件，并校验入库 -->
-	<task name="grabMGAlipayFile" refdubbo="ClearingDubboService"
-		refcomponent="mGAlipayService">
-		<transition to="grabFilesJoin" />
-	</task>
-	<!-- step1.2：获取统一T日全量文件，并校验入库 -->
-	<task name="grabMGUpayFile" refdubbo="ClearingDubboService"
-		refcomponent="mGUpayService">
-		<transition to="grabFilesJoin" />
 	</task>
 
-	<!-- step1.3：获取咪咕T日全量文件，并校验入库 -->
-	<task name="grabMGMiguFile" refdubbo="ClearingDubboService"
-		refcomponent="mGSettleService">
-		<transition to="grabFilesJoin" />
+	<!-- step2.4：获取省T日全量文件，并校验入库 -->
+	<task name="grabMGBossFile" refdubbo="ProDubboService" refcomponent="fileHandleService">
+		<field key="serviceID" value="serviceID-20170209-799901" />
+		<transition to="initMiguAccountResultData" />
 	</task>
 
-	<!-- step1.4：获取省T日全量文件，并校验入库 -->
-	<task name="grabMGBossFile" refdubbo="ClearingDubboService"
-		refcomponent="mGBossService">
-		<transition to="grabFilesJoin" />
+	<!-- step3:咪咕对账初始化 -->
+	<task name="initMiguAccountResultData" refdubbo="ProDubboService" refcomponent="callOnlyInParamsProcedureService">
+		<field key="stepID" value="STEP_0064_ACC_INIT_506693" />   
+		<transition to="checkUpayAndAlipayAccount" />
 	</task>
 
-	<!-- 等待对账原始文件入库 -->
-	<join name="grabFilesJoin">
-		<transition to="MiguAccountInit" />
-	</join>
+	<!-- step4.1：统一T日数据与第三方支付T日数据对账 -->
+	<task name="checkUpayAndAlipayAccount" refdubbo="ProDubboService" refcomponent="callOnlyInParamsProcedureService">
+		<field key="stepID" value="STEP_0064_ACC_525551" />
+		<transition to="checkEqualMiguAndAlipayAccount" />
+	</task>
 
-    
-    <!-- 对账初始化 -->
-    <task name="MiguAccountInit" refdubbo="ClearingDubboService"
-        refcomponent="MiguAccountInitialService">
-        <transition to="checkUpayAlipayAccount" />
-    </task>
-    
-    <!-- step2：统一T日数据与第三方支付T日数据对账 -->
-    <task name="checkUpayAlipayAccount" refdubbo="ClearingDubboService"
-        refcomponent="MiguCheckAlipayUpayAccountService">
-        <transition to="checkEqualMiguAccount" />
-    </task>
+	<!-- step4.2：第三方支付平账数据与咪咕T日数据对账 -->
+	<task name="checkEqualMiguAndAlipayAccount" refdubbo="ProDubboService" refcomponent="callOnlyInParamsProcedureService">
+		<field key="stepID" value="STEP_0064_ACC_901111" />
+		<transition to="checkMiguRefund" />
+	</task>
 
-    <!-- step3：第三方支付平账数据与咪咕T日数据对账 -->
-    <task name="checkEqualMiguAccount" refdubbo="ClearingDubboService"
-        refcomponent="MiguCheckAlipayMiguAccountService">
-        <transition to="refundAccount" />
-    </task>
-    
-    <!-- step4:咪咕退费对账-->
-    <task name="refundAccount" refdubbo="ClearingDubboService"
-        refcomponent="MiguAccountRefundService">
-        <transition to="checkEqualBossAccount"/>
-    </task>
-    
-    <!-- step5：商户平账数据与省T日数据对账 -->
-    <task name="checkEqualBossAccount" refdubbo="ClearingDubboService"
-        refcomponent="MiguCheckMiguBossAccountService">
-        <transition to="checkThirdPayServiceAccount" />
-    </task>
-    
-    <!-- step6：第三方支付服务费对账 -->
-    <task name="checkThirdPayServiceAccount" refdubbo="ClearingDubboService"
-        refcomponent="MiguAccountThridpayServiceChargeService">
-        <transition to="exportFilesFork" />
-    </task>
+	<!-- step4.3:咪咕退费对账 -->
+	<task name="checkMiguRefund" refdubbo="ProDubboService"	refcomponent="callOnlyInParamsProcedureService">
+		<field key="stepID" value="STEP_0064_ACC_468882" />
+		<field key="refundDeadline" value="30" />
+		<transition to="checkEqualBossAccount" />
+	</task>
 
-    <!-- step7：导出对账结果文件 -->
-    <fork name="exportFilesFork">
-        <transition to="exportMiguFile" />
-        <transition to="exportBossFile" />
-    </fork>
+	<!-- step4.4：商户平账数据与省T日数据对账 -->
+	<task name="checkEqualBossAccount" refdubbo="ProDubboService" refcomponent="callOnlyInParamsProcedureService">
+		<field key="stepID" value="STEP_0064_ACC_660833" />
+		<transition to="checkThirdPayServiceAccount" />
+	</task>
 
-    <!-- step7.1：导出咪咕平账文件 -->
-    <task name="exportMiguFile" refdubbo="ClearingDubboService"
-        refcomponent="MiguFlatFileExportingService">
-        <transition to="exportFilesJoin" />
-    </task>
+	<!-- step4.5：第三方支付服务费对账 -->
+	<task name="checkThirdPayServiceAccount" refdubbo="ProDubboService"	refcomponent="callOnlyInParamsProcedureService">
+		<field key="stepID" value="STEP_0064_ACC_111408" />
+		<transition to="exportMiguFile" />
+	</task>
 
-    <!-- step7.2：导出省差异文件 -->
-    <task name="exportBossFile" refdubbo="ClearingDubboService"
-        refcomponent="MiguBossDiffFileExportingService">
-        <transition to="exportFilesJoin" />
-    </task>
+	<!-- step5.1：导出咪咕平账文件 -->
+	<task name="exportMiguFile" refdubbo="ProDubboService" refcomponent="fileExportService">
+		<field key="FILE_EXPORT_ID" value="FILE_0064_MIGU_FLAT_398330" />     
+		<transition to="exportBossDiffFile" />
+	</task>
 
-    <!-- 等待step7导出多帐结果文件 -->
-    <join name="exportFilesJoin">
-        <transition to="end" />
-    </join>
+	<!-- step5.2：导出省差异文件 -->
+	<task name="exportBossDiffFile" refdubbo="ProDubboService"
+		refcomponent="fileExportService">
+		<field key="FILE_EXPORT_ID" value="FILE_0064_MIGU_DIFF_377982" />
+		<transition to="end" />
+	</task>
 
-    <!-- 流程结束 -->
-    <end name="end" />
+	<!-- 流程结束 -->
+	<end name="end" />
 
 </process>

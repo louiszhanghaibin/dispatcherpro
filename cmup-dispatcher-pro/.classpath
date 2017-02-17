@@ -6,7 +6,7 @@
 			<attribute name="maven.pomderived" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry excluding="**" kind="src" output="target/classes" path="src/main/resources">
+	<classpathentry excluding="**" including="**/*.java" kind="src" output="target/classes" path="src/main/resources">
 		<attributes>
 			<attribute name="maven.pomderived" value="true"/>
 		</attributes>
@@ -34,10 +34,5 @@
 	<classpathentry kind="lib" path="src/main/webapp/WEB-INF/lib/cmup-hlwfl-dubbo.jar"/>
 	<classpathentry kind="lib" path="src/main/webapp/WEB-INF/lib/cmup-mgzxjf-dubbo.jar"/>
 	<classpathentry kind="lib" path="src/main/webapp/WEB-INF/lib/cmup-test-dubbo.jar"/>
-	<classpathentry excluding="**" kind="src" output="target/test-classes" path="src/test/resources">
-		<attributes>
-			<attribute name="maven.pomderived" value="true"/>
-		</attributes>
-	</classpathentry>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>
