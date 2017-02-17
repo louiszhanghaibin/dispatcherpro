@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--互联网返利业务，对账流程测试流程，仅仅用作测试流程使用-->
+<process id="Proc_Account_MM" name="Proc_Account_MM">
+	<!-- 流程开始 -->
+	<start name="start">
+		<transition to="initialAccountResultData" />
+	</start>
+
+	<!-- step1：获取对账文件 -->
+	<fork name="grabFilesFork">
+		<transition to="grabMMSettleRegxFile" />
+		<transition to="grabMCSettleRegxFile" />
+	</fork>
+
+	<!-- step1.1：获取互联网返利省侧对账文件，并校验入库 -->
+	<task name="grabMMSettleRegxFile" refdubbo="MMDubboService"
+		refcomponent="mMSettleService">
+		<transition to="grabFilesJoin" />
+	</task>
+	
+	<!-- step1.2：获取互联网公司对账文件，并校验入库 -->
+	<task name="grabMCSettleRegxFile" refdubbo="MMDubboService"
+		refcomponent="mCSettleService">
+		<transition to="grabFilesJoin" />
+	</task>
+
+	<!-- 等待对账原始文件入库 -->
+	<join name="grabFilesJoin">
+		<transition to="initialAccountResultData" />
+	</join>
+
+	<!-- step2：对账流程数据初始化 -->
+	<task name="initialAccountResultData" refdubbo="MMDubboService"
+		refcomponent="MMAccountInitialService" >
+		<transition to="checkBossUpayAccount" />
+	</task>
+
+	<!-- step3：统一T日数据与省T日数据对账 -->
+	<task name="checkBossUpayAccount" refdubbo="MMDubboService"
+		refcomponent="MMCheckBossUpayAccountService">
+		<transition to="checkBossMMAccount" />
+	</task>
+
+	<!-- step4：互联网返利M币平台日明细数据与省T日数据对账 -->
+	<task name="checkBossMMAccount" refdubbo="MMDubboService"
+		refcomponent="MMCheckBossMMAccountService">
+		<transition to="exportFilesFork" />
+	</task>
+	
+	<!-- step5：导出对账结果文件 -->
+	<fork name="exportFilesFork">
+		<transition to="exportMCFile" />
+		<transition to="exportBossFile" />
+	</fork>
+
+	<!-- step5.1：导出MC差异文件 -->
+	<task name="exportMCFile" refdubbo="MMDubboService"
+		refcomponent="MMMCDiffFileExportingService">
+		<transition to="end" />
+	</task>
+	
+	<!-- step5.2：导出Boss差异文件 -->
+	<task name="exportBossFile" refdubbo="MMDubboService"
+		refcomponent="MMBossDiffFileExportingService">
+		<transition to="end" />
+	</task>
+
+	<!-- 流程结束 -->
+	<end name="end" />
+
+</process>

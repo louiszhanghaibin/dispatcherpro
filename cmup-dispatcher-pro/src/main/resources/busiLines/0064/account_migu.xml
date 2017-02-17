@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--咪咕充值业务，对账流程测试流程，仅仅用作测试流程使用；-->
+<process id="Proc_account" name="Proc_account">
+	<!-- 流程开始 -->
+	<start name="start">
+		<transition to="UnReDoMiguAccountSuccessfulFlow" />
+	</start>
+
+    <task name="UnReDoMiguAccountSuccessfulFlow" refdubbo="ClearingDubboService"
+        refcomponent="UnReDoMiguAccountSuccessfulFlowService">
+        <transition to="MiguAccountInit" />
+    </task>
+    
+    <task name="MiguAccountInit" refdubbo="ClearingDubboService"
+        refcomponent="MiguAccountInitialService">
+        <transition to="checkUpayAlipayAccount" />
+    </task>
+    
+	<!-- step2：统一T日数据与第三方支付T日数据对账 -->
+	<task name="checkUpayAlipayAccount" refdubbo="ClearingDubboService"
+		refcomponent="MiguCheckAlipayUpayAccountService">
+		<transition to="checkEqualMiguAccount" />
+	</task>
+
+	<!-- step3：第三方支付平账数据与咪咕T日数据对账 -->
+	<task name="checkEqualMiguAccount" refdubbo="ClearingDubboService"
+		refcomponent="MiguCheckAlipayMiguAccountService">
+		<transition to="refundAccount" />
+	</task>
+	
+	<!-- step4:咪咕退费对账-->
+	<task name="refundAccount" refdubbo="ClearingDubboService"
+		refcomponent="MiguAccountRefundService">
+		<transition to="checkEqualBossAccount"/>
+	</task>
+	
+	<!-- step5：商户平账数据与省T日数据对账 -->
+	<task name="checkEqualBossAccount" refdubbo="ClearingDubboService"
+		refcomponent="MiguCheckMiguBossAccountService">
+		<transition to="checkThirdPayServiceAccount" />
+	</task>
+	
+	<!-- step6：第三方支付服务费对账 -->
+	<task name="checkThirdPayServiceAccount" refdubbo="ClearingDubboService"
+		refcomponent="MiguAccountThridpayServiceChargeService">
+		<transition to="exportFilesFork" />
+	</task>
+
+	<!-- step7：导出对账结果文件 -->
+	<fork name="exportFilesFork">
+		<transition to="exportMiguFile" />
+		<transition to="exportBossFile" />
+	</fork>
+
+	<!-- step7.1：导出咪咕平账文件 -->
+	<task name="exportMiguFile" refdubbo="ClearingDubboService"
+		refcomponent="MiguFlatFileExportingService">
+		<transition to="exportFilesJoin" />
+	</task>
+
+	<!-- step7.2：导出省差异文件 -->
+	<task name="exportBossFile" refdubbo="ClearingDubboService"
+		refcomponent="MiguBossDiffFileExportingService">
+		<transition to="exportFilesJoin" />
+	</task>
+
+	<!-- 等待step7导出多帐结果文件 -->
+	<join name="exportFilesJoin">
+		<transition to="end" />
+	</join>
+
+	<!-- 流程结束 -->
+	<end name="end" />
+
+</process>

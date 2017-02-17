@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--物联网业务，对账流程，生产环境使用；-->
+<process id="Proc_Day_Settlement_IOT" name="Proc_Day_Settlement_IOT">
+	<!-- 流程开始 -->
+	<start name="start">
+		<transition to="unReDoIotAccountSuccessfulFlow" />
+	</start>
+	
+	<!-- step0：物联网日结算流程是否已经成功执行过了，执行过了就不执行 -->
+	<task name="unReDoIotAccountSuccessfulFlow" refdubbo="ProDubboService" refcomponent="unReDoSuccessfulFlowService">
+		<field key="processId" value="Proc_Day_Settlement_IOT"/>
+        <field key="flowDescKey" value="物联网日结算"/>
+		<transition to="checkChangeRate" />
+	</task>
+
+	<!-- step2：日结算流程数据服务费率校验，检验不通过，流程终止 -->
+	<task name="checkChangeRate" refdubbo="ProDubboService" refcomponent="callProcedureDataOutputCanEndTheFlowService">
+		<field key="stepID" value="STEP_0070_DAY_SET_CHECK_CHARGE_RATE"/>
+		<transition to="initialDaySettlementResultData" />
+	</task>
+	
+	<!-- step3：日结算流程数据初始化 -->
+	<task name="initialDaySettlementResultData" refdubbo="ProDubboService" refcomponent="callProcedureDataOutputCanEndTheFlowService">
+		<field key="stepID" value="STEP_0070_DAY_SET_INIT"/>
+		<field key="processId" value="Proc_Clearing_IOT"/>
+		<transition to="daySettlement" />
+	</task>
+	
+	<!-- step4：校验退费记录是否有效（是否在order_info表有源记录） -->
+	<!-- <task name="refundValidCheck" refdubbo="ProDubboService" refcomponent="callProcedureDataOutputService">
+		<field key="stepID" value="STEP_0070_REFUND_VALID_CHECK"/>
+		<transition to="daySettlement" />
+	</task> -->
+	
+	<!-- step5：调用日结算存储过程 -->
+	<task name="daySettlement" refdubbo="ProDubboService" refcomponent="callOnlyInParamsProcedureService">
+		<field key="stepID" value="STEP_0070_DAY_SET"/>
+ 		<transition to="end" />
+	</task>
+
+	<!-- 流程结束 -->
+	<end name="end" />
+
+</process>

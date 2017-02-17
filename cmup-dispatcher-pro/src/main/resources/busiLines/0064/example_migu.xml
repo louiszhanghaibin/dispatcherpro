@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<process id="Proc_miGuTest" name="Proc_miGuTest">
+
+	<start name="start">
+		<transition to="clearingTestTask" />
+	</start>
+	
+	<task name="clearingTestTask"  refdubbo="testDubboService" refcomponent="getFileService">
+		<transition to="testTask" />
+	</task>
+
+	<task name="testTask" refdubbo="testDubboService" refcomponent="getUpayFileService">
+		<transition to="end" />
+	</task>
+
+	<end name="end" />
+
+</process>
