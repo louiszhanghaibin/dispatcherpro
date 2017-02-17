@@ -27,7 +27,7 @@
 	
 	<!-- 配置文件引入 -->
 	<import resource="spring-myBatis.xml"/>
-	<import resource="autoflow/spring-autoflow.xml"/>
+	<import resource="spring-autoflow.xml"/>
 	<import resource="spring-mvc-controller.xml"/>
 	<import resource="spring-datasource.xml"/>
 	<import resource="spring-dubbo-customer.xml"/>

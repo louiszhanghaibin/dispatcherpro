@@ -16,7 +16,6 @@
 		<property name="configLocation" value="classpath:mybatis-autoflow.xml"></property>
 	</bean>
 	
-	
 	<bean id="configbean"	class="cmsz.autoflow.engine.cfg.SupportSpringConfiguration" />
 	
 	<bean id="engine" factory-bean="configbean"
@@ -28,12 +27,12 @@
 		<property name="files">
 			<list>
 				<!-- 需要部署的流程定义文件 运行的业务不同，需要部署的流程定义文件也不同-->
-                <!-- 物联网 -->
-                <value>autoflow/clearing_iot.xml</value>
-                <value>autoflow/day_settlement_iot.xml</value>
-                <value>autoflow/month_settlement_iot.xml</value>
-                <!-- 微信 -->
-                <value>autoflow/clearing_wecpay.xml</value>
+				<!-- 咪咕充值业务-->
+				<value>alipay_migu.xml</value>
+				<value>clearing_migu.xml</value>
+                <value>day_settlement_audit_migu.xml</value>
+                <value>mouth_settlement_audit_migu.xml</value>
+
 			</list>
 		</property>
 	</bean>

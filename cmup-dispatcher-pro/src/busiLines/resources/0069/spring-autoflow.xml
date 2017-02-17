@@ -24,15 +24,15 @@
 		
 	<bean id="processXMLFileLoader" class="cmsz.autoflow.engine.cfg.ProcessXMLFileLoader"	init-method="load">
 		<!-- override 为true，程序启动时会自动覆盖数据库中以后的记录 -->
-		<property name="override" value="true"/>
+		<property name="override" value="false"/>
 		<property name="files">
 			<list>
 				<!-- 需要部署的流程定义文件 运行的业务不同，需要部署的流程定义文件也不同-->
-                <!-- 互联网返利-->
-                <value>autoflow/clearing_mm.xml</value>
-                <value>autoflow/month_settlement_mm.xml</value>
-                <value>autoflow/writeOff_mm.xml</value>
-                <value>autoflow/receipt_mc.xml</value>
+                <!-- 能力开放平台 -->
+                <value>clearing_cmosp.xml</value>
+                <value>ser_fee_calculate_osp.xml</value>
+                <value>ser_fee_mon_settlement_osp.xml</value>
+
 			</list>
 		</property>
 	</bean>

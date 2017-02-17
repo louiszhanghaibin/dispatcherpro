@@ -28,9 +28,12 @@
 		<property name="files">
 			<list>
 				<!-- 需要部署的流程定义文件 运行的业务不同，需要部署的流程定义文件也不同-->
-                <!-- 能力开放平台浙商中心 -->
-                <value>autoflow/clearing_zjoc.xml</value>
-
+                <!-- 物联网 -->
+                <value>clearing_iot.xml</value>
+                <value>day_settlement_iot.xml</value>
+                <value>month_settlement_iot.xml</value>
+                <!-- 微信 -->
+                <value>clearing_wecpay.xml</value>
 			</list>
 		</property>
 	</bean>

@@ -319,27 +319,22 @@
         <sourceDirectory>src/main/java</sourceDirectory>  
         <resources>
             <!-- 资源文件拷贝 -->
-            <resource>  
+            <resource>
                 <directory>src/main/resources</directory>
-                <!-- 资源根目录排除各环境的配置，使用单独的资源目录来指定 -->  
-	            <excludes>  
-	                <exclude>test/*</exclude>
-	                <exclude>development/*</exclude>
-	                <exclude>busiLines/*/*</exclude>
-	            </excludes>
-	            <filtering>true</filtering>
                 <!--
                 <targetPath>${project.build.directory}</targetPath>
                 -->
             </resource>
             <resource>
-            	<directory>src/main/resources/${profiles.active}</directory>
+            	<directory>src/environment/resources/${profiles.active}</directory>
             	<filtering>true</filtering>
         	</resource>
         	<resource>
-            	<directory>src/main/resources/busiLines/${bL}</directory>
+            	<directory>src/busiLines/resources/${bL}</directory>
             	<filtering>true</filtering>
+            	<!-- 
             	<targetPath>${project.build.directory}/classes/autoflow</targetPath>
+            	 -->
         	</resource>
             
         </resources>
