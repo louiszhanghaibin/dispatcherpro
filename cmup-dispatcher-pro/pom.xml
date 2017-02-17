@@ -1,7 +1,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
-  <groupId>com.cmsz.cump</groupId>
+  <groupId>com.cmsz.cmup</groupId>
   <artifactId>cmup-dispatcher-pro</artifactId>
   <packaging>war</packaging>
   <version>0.0.1-SNAPSHOT</version>
@@ -14,7 +14,6 @@
         <maven.compiler.target>1.7</maven.compiler.target>
      	<maven.compiler.compilerVersion>1.7</maven.compiler.compilerVersion>
   </properties>
-  
   
   <dependencies>
   
@@ -89,7 +88,7 @@
 	    <artifactId>slf4j-api</artifactId>
 	    <version>1.7.22</version>
 	</dependency>
-	
+	<!--  
 	<dependency>
 	    <groupId>com.fasterxml.jackson.core</groupId>
 	    <artifactId>jackson-core</artifactId>
@@ -101,7 +100,19 @@
 	    <artifactId>jackson-annotations</artifactId>
 	    <version>2.8.6</version>
 	</dependency>
+	-->
+	<dependency>
+	    <groupId>org.codehaus.jackson</groupId>
+	    <artifactId>jackson-mapper-asl</artifactId>
+	    <version>1.9.13</version>
+	</dependency>
 	
+	<dependency>
+	    <groupId>org.codehaus.jackson</groupId>
+	    <artifactId>jackson-core-asl</artifactId>
+	    <version>1.9.13</version>
+	</dependency>
+
 	<dependency>
 	    <groupId>org.quartz-scheduler</groupId>
 	    <artifactId>quartz</artifactId>
@@ -272,19 +283,19 @@
 	</dependency>
 	
 	<dependency>
-		<groupId>com.cmsz.cump</groupId>
+		<groupId>com.cmsz.cmup</groupId>
 		<artifactId>cmup-commons-pro</artifactId>
 		<version>0.0.1-SNAPSHOT</version>
 	</dependency>
 	
 	<dependency>
-		<groupId>com.cmsz.cump</groupId>
+		<groupId>com.cmsz.cmup</groupId>
 		<artifactId>cmup-frame-pro</artifactId>
 		<version>0.0.1-SNAPSHOT</version>
 	</dependency>
 
 	<dependency>
-		<groupId>com.cmsz.cump</groupId>
+		<groupId>com.cmsz.cmup</groupId>
 		<artifactId>cmup-autoflow-pro</artifactId>
 		<version>0.0.1-SNAPSHOT</version>
 	</dependency>
@@ -310,10 +321,27 @@
             <!-- 资源文件拷贝 -->
             <resource>  
                 <directory>src/main/resources</directory>
+                <!-- 资源根目录排除各环境的配置，使用单独的资源目录来指定 -->  
+	            <excludes>  
+	                <exclude>test/*</exclude>
+	                <exclude>development/*</exclude>
+	                <exclude>busiLines/*/*</exclude>
+	            </excludes>
+	            <filtering>true</filtering>
                 <!--
                 <targetPath>${project.build.directory}</targetPath>
                 -->
             </resource>
+            <resource>
+            	<directory>src/main/resources/${profiles.active}</directory>
+            	<filtering>true</filtering>
+        	</resource>
+        	<resource>
+            	<directory>src/main/resources/busiLines/${bL}</directory>
+            	<filtering>true</filtering>
+            	<targetPath>${project.build.directory}/classes/autoflow</targetPath>
+        	</resource>
+            
         </resources>
 
   		<plugins>
@@ -363,7 +391,62 @@
 	                <version>2.2</version>
 		        </plugin>
 
+				<plugin>
+					<groupId>org.apache.tomcat.maven</groupId>
+					<artifactId>tomcat7-maven-plugin</artifactId>
+					<version>2.2</version>
+					<configuration>
+						<server>tomcatServer</server>
+						<!-- http port -->
+						<port>8080</port>
+						<!-- application path always starts with / -->
+						<path>/cmup-dispatcher-pro</path>
+						<!-- optional path to a context file 
+						<contextFile>${tomcatContextXml}</contextFile>
+						-->
+						<!-- optional system propoerties you want to add -->
+						<systemProperties>
+							<appserver.base>${project.build.directory}/appserver-base</appserver.base>
+							<appserver.home>${project.build.directory}/appserver-home</appserver.home>
+							<derby.system.home>${project.build.directory}/appserver-base/logs</derby.system.home>
+							<java.io.tmpdir>${project.build.directory}</java.io.tmpdir>
+						</systemProperties>
+						<!-- if you want to use test dependencies rather than only runtime -->
+						<useTestClasspath>false</useTestClasspath>
+						<!-- optional if you want to add some extra directories into the classloader 
+						<additionalClasspathDirs>
+							<additionalClasspathDir></additionalClasspathDir>
+						</additionalClasspathDirs>
+						-->
+					</configuration>
+
+				</plugin>
+
   		</plugins>
 
   </build>
+
+   <profiles>
+		<profile>
+			<!-- 本地开发环境 -->
+			<id>development</id>
+			<properties>
+				<profiles.active>development</profiles.active>
+				<bL>0068</bL>
+			</properties>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+		</profile>
+		<profile>
+			<!-- 测试环境 -->
+			<id>test</id>
+			<properties>
+				<profiles.active>test</profiles.active>
+			</properties>
+		</profile>
+  
+    </profiles>
+
+    
 </project>
