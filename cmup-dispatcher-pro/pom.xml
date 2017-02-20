@@ -340,7 +340,6 @@
         </resources>
 
   		<plugins>
-  		
 	  			<!-- 资源文件编码 -->
 	            <plugin>
 	                <groupId>org.apache.maven.plugins</groupId>  
