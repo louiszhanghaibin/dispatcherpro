@@ -38,12 +38,36 @@
 			<attribute name="maven.pomderived" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="src/main/webapp/WEB-INF/lib/cmup-alipay-dubbo.jar"/>
-	<classpathentry kind="lib" path="src/main/webapp/WEB-INF/lib/cmup-clearing-dubbo.jar"/>
-	<classpathentry kind="lib" path="src/main/webapp/WEB-INF/lib/cmup-clearing-pro-dubbo.jar"/>
-	<classpathentry kind="lib" path="src/main/webapp/WEB-INF/lib/cmup-hlwfl-dubbo.jar"/>
-	<classpathentry kind="lib" path="src/main/webapp/WEB-INF/lib/cmup-mgzxjf-dubbo.jar"/>
-	<classpathentry kind="lib" path="src/main/webapp/WEB-INF/lib/cmup-test-dubbo.jar"/>
+	<classpathentry kind="lib" path="src/main/webapp/WEB-INF/lib/cmup-alipay-dubbo.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="src/main/webapp/WEB-INF/lib/cmup-test-dubbo.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="src/main/webapp/WEB-INF/lib/cmup-clearing-pro-dubbo.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="src/main/webapp/WEB-INF/lib/cmup-fileExporting-pro-dubbo.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="src/main/webapp/WEB-INF/lib/cmup-fileImporting-pro-dubbo.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="src/main/webapp/WEB-INF/lib/cmup-settle-pro-dubbo.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry excluding="**" kind="src" output="target/test-classes" path="src/test/resources">
 		<attributes>
 			<attribute name="maven.pomderived" value="true"/>

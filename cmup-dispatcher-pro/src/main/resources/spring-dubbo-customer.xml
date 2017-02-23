@@ -18,12 +18,12 @@
     -->
     
     
-    <dubbo:reference id="ClearingDubboService" interface="com.cmsz.cmup.clearing.dubbo.service.ClearingDubboService"/>
  	<dubbo:reference id="alipayDubboService" interface="com.cmsz.cmup.alipay.dubbo.service.AlipayDubboService"/>
- 	<dubbo:reference id="MgzxjfDubboService" interface="com.cmsz.cmup.mgzxjf.dubbo.service.MgzxjfDubboService"/>
-	<dubbo:reference id="MMDubboService" interface="com.cmsz.cmup.mm.dubbo.service.MMDubboService"/>
-	<dubbo:reference id="OspDubboService" interface="com.cmsz.cmosp.clearing.dubbo.service.OspDubboService"/>
 
 	<!-- 产品化 -->
-	<dubbo:reference id="ProDubboService" interface="com.cmsz.cmup.clearing.dubbo.service.ProDubboService"/>
+	<dubbo:reference id="FileImportingDubboService" interface="com.cmsz.cmup.fileImporting.dubbo.service.FileImportingDubboService"/>
+	<dubbo:reference id="ClearingDubboService" interface="com.cmsz.cmup.clearing.dubbo.service.ClearingDubboService"/>
+	<dubbo:reference id="FileExportDubboService" interface="com.cmsz.cmup.fileExporting.dubbo.service.FileExportDubboService"/>
+	<dubbo:reference id="SettleDubboService" interface="com.cmsz.cmup.settle.dubbo.service.SettleDubboService"/>
+
 </beans>
