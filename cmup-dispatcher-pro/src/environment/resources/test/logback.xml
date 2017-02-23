@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration debug="false">
 	<contextName>UPAY</contextName>
-	<property resource="config.properties" />
-	<property name="log.base" value="/opt/upay3/apps/logs"/>
-	<property name="instance.id" value="dispatcher"/>
+	<property resource="env.properties" />
 	<!-- 系统运行日志记录文件begin -->
 	<appender name="SYSTEM_APPENDER_ROOT" class="ch.qos.logback.core.rolling.RollingFileAppender">
 		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">

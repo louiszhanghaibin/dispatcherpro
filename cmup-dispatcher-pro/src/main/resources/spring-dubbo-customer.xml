@@ -11,7 +11,7 @@
     <dubbo:application name="consumer-of-dispatcher-app"  />
  
  	<!-- 使用zookeeper广播注册中心暴露发现服务地址，单机配置方式  -->
-    <dubbo:registry protocol="zookeeper" address="127.0.0.1:2181" />
+    <dubbo:registry address="${dubbo.zookeeper.address}" />
     
     <!-- 使用zookeeper广播注册中心暴露发现服务地址，集群配置方式
     <dubbo:registry address="zookeeper://192.168.86.10:2181?backup=192.168.86.11:2181,192.168.86.12:2181" />

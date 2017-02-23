@@ -13,6 +13,9 @@
         <maven.compiler.source>1.7</maven.compiler.source>
         <maven.compiler.target>1.7</maven.compiler.target>
      	<maven.compiler.compilerVersion>1.7</maven.compiler.compilerVersion>
+
+		<server.name>tomcat</server.name>
+		<server.version>7.0.59</server.version>
   </properties>
   
   <dependencies>
@@ -415,6 +418,87 @@
 					</configuration>
 
 				</plugin>
+
+				<!-- 拷贝tomcat 并解压 -->
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-dependency-plugin</artifactId>
+					<version>3.0.0</version>
+					<executions>
+						<execution>
+							<id>unpack</id>
+							<phase>prepare-package</phase>
+							<goals>
+								<goal>unpack</goal>
+							</goals>
+							<configuration>
+								<outputDirectory>${project.build.directory}</outputDirectory>
+								<artifactItems>
+									<artifactItem>
+										<groupId>org.apache.tomcat</groupId>
+										<artifactId>${server.name}</artifactId>
+										<version>${server.version}</version>
+										<type>tar.gz</type>
+									</artifactItem>
+								</artifactItems>
+							</configuration>
+						</execution>
+					</executions>
+				</plugin>
+				<!-- 将应用拷贝到tomcat的webapps,并将tomcat打包压缩 -->
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-antrun-plugin</artifactId>
+					<version>1.8</version>
+					<executions>
+						<execution>
+							<id>compression</id>
+							<phase>package</phase>
+							<configuration>
+								<target>
+									<delete verbose="true" includeemptydirs="true">
+										<fileset
+											dir="${project.build.directory}/apache-${server.name}-${server.version}/webapps">
+											<include name="**/*" />
+										</fileset>
+									</delete>
+									<!-- 
+									<copy todir="${project.build.directory}/apache-${server.name}-${server.version}/webapps/${project.artifactId}"
+									 	includeemptydirs="true" >
+									 	
+							            <fileset dir="${project.build.directory}/${project.artifactId}">
+							            </fileset>
+           							</copy>
+									-->
+									<copy
+										todir="${project.build.directory}/apache-${server.name}-${server.version}/webapps"
+										encoding="utf-8">
+										<fileset dir="${project.build.directory}">
+											<include name="*.war" />
+										</fileset>
+									</copy>
+									
+									<unzip src="${project.build.directory}/apache-${server.name}-${server.version}/webapps/${project.artifactId}.war" 
+										dest="${project.build.directory}/apache-${server.name}-${server.version}/webapps/${project.artifactId}"/>
+									
+									<delete file="${project.build.directory}/apache-${server.name}-${server.version}/webapps/${project.artifactId}.war">
+									</delete>
+									
+									<tar destfile="${project.build.directory}/${artifactId}.tar.gz"
+										compression="gzip" basedir="${project.build.directory}"
+										includes="apache-${server.name}-${server.version}/**">
+									</tar>
+									<!-- <move todir="./target\classes"> <fileset dir="../xpay-common/target/classes" 
+										/> </move> -->
+								</target>
+							</configuration>
+							<goals>
+								<goal>run</goal>
+							</goals>
+						</execution>
+					</executions>
+				</plugin>
+
 
   		</plugins>
 

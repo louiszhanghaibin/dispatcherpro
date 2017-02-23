@@ -15,13 +15,15 @@
 		class="com.cmsz.cmup.commons.utils.EncryptablePropertyPlaceholderConfigurer">
 		<property name="locations">
 			<list>
+				<value>classpath:env.properties</value>
 				<value>classpath:config.properties</value>
 			</list>
 		</property>
 	</bean>
-	<!-- 引入属性文件 -->
-	<context:property-placeholder location="classpath:config.properties" />
-
+	<!-- 引入属性文件 
+	<context:property-placeholder order="1" location="classpath:env.properties" />
+	<context:property-placeholder order="2" location="classpath:config.properties" />
+	-->
 	<!-- 自动扫描(自动注入) -->
 	<context:component-scan base-package="com.cmsz.cmup" /> 
 	
