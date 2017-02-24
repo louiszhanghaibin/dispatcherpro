@@ -91,6 +91,18 @@
 	    <artifactId>slf4j-api</artifactId>
 	    <version>1.7.22</version>
 	</dependency>
+	<dependency>
+	    <groupId>org.slf4j</groupId>
+	    <artifactId>log4j-over-slf4j</artifactId>
+	    <version>1.7.22</version>
+	</dependency>
+
+	<dependency>
+	    <groupId>org.slf4j</groupId>
+	    <artifactId>jcl-over-slf4j</artifactId>
+	    <version>1.7.22</version>
+	</dependency>
+	
 	<!--  
 	<dependency>
 	    <groupId>com.fasterxml.jackson.core</groupId>
@@ -205,6 +217,12 @@
 	    <groupId>org.springframework</groupId>
 	    <artifactId>spring-tx</artifactId>
 	    <version>4.3.3.RELEASE</version>
+	    <exclusions>
+	    	<exclusion>
+	    		<artifactId>commons-logging</artifactId>
+	    		<groupId>commons-logging</groupId>
+	    	</exclusion>
+	    </exclusions>
 	</dependency>
 	<dependency>
 	    <groupId>org.springframework</groupId>
@@ -274,9 +292,19 @@
 	</dependency>
 	
 	<dependency>
-	    <groupId>org.apache.zookeeper</groupId>
-	    <artifactId>zookeeper</artifactId>
-	    <version>3.4.6</version>
+			<groupId>org.apache.zookeeper</groupId>
+			<artifactId>zookeeper</artifactId>
+			<version>3.4.8</version>
+			<exclusions>
+				<exclusion>
+					<artifactId>log4j</artifactId>
+					<groupId>log4j</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>slf4j-log4j12</artifactId>
+					<groupId>org.slf4j</groupId>
+				</exclusion>
+			</exclusions>
 	</dependency>
 	
 	<dependency>
@@ -510,7 +538,7 @@
 			<id>development</id>
 			<properties>
 				<profiles.active>development</profiles.active>
-				<bL>0068</bL>
+				<bL>0069</bL>
 			</properties>
 			<activation>
 				<activeByDefault>true</activeByDefault>

@@ -5,7 +5,7 @@
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/java"/>
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/resources"/>
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/environment/resources/development"/>
-        <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/busiLines/resources/0068"/>
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/busiLines/resources/0069"/>
         <property name="java-output-path" value="/cmup-dispatcher-pro/target/classes"/>
         <property name="context-root" value="cmup-dispatcher-pro"/>
     </wb-module>

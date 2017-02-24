@@ -31,8 +31,8 @@ public class DeployProcessTest {
 	@Test
 	public void testProcessDeploy() {
 
-		String processFileName = "example_migu.xml";
-		InputStream in = StreamHelper.openStream("autoflow/" + processFileName);
+		String processFileName = "clearing_zxjf.xml";
+		InputStream in = StreamHelper.openStream(processFileName);
 		String result = engine.process().deploy(in);
 		System.out.println("流程[" + result + "]已部署成功！");
 
