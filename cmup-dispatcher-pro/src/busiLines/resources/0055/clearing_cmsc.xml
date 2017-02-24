@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--移动商城业务，对账流程，生产环境使用；-->
+<process id="Proc_Clearing_CMMALL" name="Proc_Clearing_CMMALL">
+    <!-- 流程开始 -->
+    <start name="start">
+        <transition to="unReDoCMMallAccountSuccessfulFlow" />
+    </start>
+
+    <!-- 移动商城对账流程是否已经成功执行过了，执行过了就不执行 -->
+    <task name="unReDoCMMallAccountSuccessfulFlow" refdubbo="ProDubboService" refcomponent="unReDoSuccessfulFlowService">
+        <field key="processId" value="Proc_Clearing_CMMALL"/>
+        <field key="flowDescKey" value="移动商城业务对账"/>
+        <transition to="grabCMMallFile" />
+    </task>
+
+    <!-- 移动商城文件，校验入库 -->
+    <task name="grabCMMallFile" refdubbo = "ProDubboService"  refcomponent = "fileHandleService">
+        <field key="serviceID" value="serviceID-20161208-173735" />
+        <transition to = "grabBossFile"/>
+    </task>
+
+    <!-- 省文件，校验入库 -->
+    <task name="grabBossFile" refdubbo = "ProDubboService" refcomponent = "fileHandleService">
+        <field key="serviceID" value="serviceID-20161208-173743" />
+        <transition to = "initCMMallAccountResultData"/>
+    </task>
+
+    <!-- 移动商城对账流程数据初始化 -->
+    <task name="initCMMallAccountResultData" refdubbo="ProDubboService" refcomponent="callOnlyInParamsProcedureService">
+        <field key="stepID" value="STEP_0055_ACC_INIT_395763"/>
+        <transition to="checkCMMallAndBossMiss" />
+    </task>
+
+    <!-- 省和统一对账、移动商城和统一对账 ，记录省和商城的少账记录及条数告警-->
+    <task name="checkCMMallAndBossMiss" refdubbo="ProDubboService" refcomponent="callProcedureDataOutputService">
+        <field key="stepID" value="STEP_0055_ACC_930134"/>
+        <transition to="checkCMMallAndBossAccount" />
+    </task>
+
+    <!-- 省和移动商城对账，记录差异 -->
+    <task name="checkCMMallAndBossAccount" refdubbo="ProDubboService" refcomponent="callOnlyInParamsProcedureService">
+        <field key="stepID" value="STEP_0055_ACC_084617"/>
+        <transition to="exportBossDiffFile" />
+    </task>
+
+    <!-- 导出省差异文件 -->
+    <task name="exportBossDiffFile" refdubbo="ProDubboService" refcomponent="fileExportService">
+        <field key="FILE_EXPORT_ID" value="FILE_0055_CMSC_BOSS_DIFF_543093"/>
+        <transition to="exportBossDetailFile" />
+    </task>
+
+    <!-- 导出省日全量明细文件 -->
+    <task name="exportBossDetailFile" refdubbo="ProDubboService" refcomponent="isExportFullFileService">
+        <field key="FILE_EXPORT_ID" value="FILE_0055_CMSC_BOSS_ALL_038575"/>
+        <transition to="exportCMMallDiffFile" />
+    </task>
+
+    <!-- 导出移动商城差异文件 -->
+    <task name="exportCMMallDiffFile" refdubbo="ProDubboService" refcomponent="fileExportService">
+        <field key="FILE_EXPORT_ID" value="FILE_0055_CMSC_DIFF_430272"/>
+        <transition to="end" />
+    </task>
+
+    <!-- 流程结束 -->
+    <end name="end" />
+
+</process>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--移动商城业务，营销文件解析入库流程，生产环境使用；-->
+<process id="Proc_Analysis_SCMA" name="Proc_Analysis_SCMA">
+    <!-- 流程开始 -->
+    <start name="start">
+        <transition to="unReDoScmaAccountSuccessfulFlow" />
+    </start>
+
+    <!-- step0: 移动商城营销文件入库是否已经成功执行过了，执行过了就不执行 -->
+    <task name="unReDoScmaAccountSuccessfulFlow" refdubbo="ProDubboService" refcomponent="unReDoSuccessfulFlowService">
+        <field key="processId" value="Proc_Analysis_SCMA"/>
+        <field key="flowDescKey" value="移动商城业务营销活动入库"/>
+        <transition to="grabMarketFile" />
+    </task>
+    
+     <!-- step1： 营销活动文件，校验入库（不参与对账，仅入库处理） -->
+    <task name="grabMarketFile" refdubbo = "ProDubboService" refcomponent = "fileHandleService">
+        <field key="serviceID" value="serviceID-20161208-171911" />
+        <transition to = "end"/>
+    </task>  
+    
+    <!-- 流程结束 -->
+    <end name="end" />
+
+</process>

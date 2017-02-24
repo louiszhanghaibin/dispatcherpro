@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--天猫商城业务，对账流程，生产环境使用；-->
+<process id="Proc_Clearing_TMALL" name="Proc_Clearing_TMALL">
+    <!-- 流程开始 -->
+    <start name="start">
+        <transition to="unReDoTMallAccountSuccessfulFlow" />
+    </start>
+
+    <!-- 天猫商城对账流程是否已经成功执行过了，执行过了就不执行 -->
+    <task name="unReDoTMallAccountSuccessfulFlow" refdubbo="ProDubboService" refcomponent="unReDoSuccessfulFlowService">
+        <field key="processId" value="Proc_Clearing_TMALL"/>
+        <field key="flowDescKey" value="天猫商城业务对账"/>
+        <transition to="grabTMallFile" />
+    </task>
+
+    <!-- 天猫商城文件，校验入库 -->
+    <task name="grabTMallFile" refdubbo = "ProDubboService"  refcomponent = "fileHandleService">
+        <field key="serviceID" value="serviceID-20161208-171111" />
+        <transition to = "grabBossFile"/>
+    </task>
+
+    <!-- 省文件，校验入库 -->
+    <task name="grabBossFile" refdubbo = "ProDubboService" refcomponent = "fileHandleService">
+        <field key="serviceID" value="serviceID-20161208-719933" />
+        <transition to = "initTMallAccountResultData"/>
+    </task>
+
+    <!-- 天猫商城对账初始化 -->
+    <task name="initTMallAccountResultData" refdubbo="ProDubboService" refcomponent="callOnlyInParamsProcedureService">
+        <field key="stepID" value="STEP_0051_ACC_INIT_395763"/>
+        <transition to="checkTMallAndBossMiss" />
+    </task>
+
+    <!-- 省和统一对账、天猫商城和统一对账 ，记录省和商城的少账记录及条数并告警-->
+    <task name="checkTMallAndBossMiss" refdubbo="ProDubboService" refcomponent="callProcedureDataOutputService">
+        <field key="stepID" value="STEP_0051_ACC_518950"/>
+        <transition to="checkTMallAndBossAccount" />
+    </task>
+
+    <!-- 天猫商城与省对账 -->
+    <task name="checkTMallAndBossAccount" refdubbo="ProDubboService" refcomponent="callOnlyInParamsProcedureService">
+        <field key="stepID" value="STEP_0051_ACC_792714"/>
+        <transition to="checkTMallAndBossRefund" />
+    </task>
+
+    <!-- 天猫退费记录入库 -->
+    <task name="checkTMallAndBossRefund" refdubbo="ProDubboService" refcomponent="callOnlyInParamsProcedureService">
+        <field key="stepID" value="STEP_0051_ACC_439710"/>
+        <transition to="exportBossDiffFile" />
+    </task>
+
+    <!-- 导出省差异文件 -->
+    <task name="exportBossDiffFile" refdubbo="ProDubboService" refcomponent="fileExportService">
+        <field key="FILE_EXPORT_ID" value="FILE_0051_TAMLL_BOSS_DIFF_138510"/>
+        <transition to="exportBossDetailFile" />
+    </task>
+
+    <!-- 导出省日全量明细文件 -->
+    <task name="exportBossDetailFile" refdubbo="ProDubboService" refcomponent="isExportFullFileService">
+        <field key="FILE_EXPORT_ID" value="FILE_0051_TMALL_BOSS_ALL_389214"/>
+        <transition to="exportTMallDiffFile" />
+    </task>
+
+    <!-- 导出天猫商城差异文件 -->
+    <task name="exportTMallDiffFile" refdubbo="ProDubboService" refcomponent="fileExportService">
+        <field key="FILE_EXPORT_ID" value="FILE_0051_TMALL_DIFF_571083"/>
+        <transition to="end" />
+    </task>
+
+    <!-- 流程结束 -->
+    <end name="end" />
+
+</process>
