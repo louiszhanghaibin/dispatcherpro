@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--能力开放平台，文件校验入库流程，仅仅用作测试流程使用-->
+<process id="Proc_Clearing_ZJOC" name="Proc_Clearing_ZJOC">
+	<!-- 流程开始 -->
+	<start name="start">
+		<transition to="cmospFileValidate" />
+	</start>
+	
+	<!-- step1.1：校验能力开放平台对账文件 -->
+	<task name="cmospFileValidate" refdubbo="FileImportingDubboService"
+		refcomponent="fileImportingService">
+		<field key="serviceID" value="serviceID-20170223-163333" />
+		<field key="busiLine" value="0069"></field>
+		<transition to="zjocFileValidate" />
+	</task>
+	
+	<!-- step1.2：校验浙商对账文件-->
+	<task name="zjocFileValidate" refdubbo="FileImportingDubboService"
+		refcomponent="fileImportingService">
+		<field key="serviceID" value="serviceID-20170223-172222" />
+		<transition to="initialAccountResultData" />
+	</task>
+	
+	<!-- step2： 对账流程数据初始化 -->
+	<task name="initialAccountResultData" refdubbo="ClearingDubboService"
+		refcomponent="callOnlyInParamsProcedureService">
+		<field key="stepID" value="STEP_0069_251_ACC_INIT_895623"/>
+		<transition to="checkZjocAlipayAccount"/>
+	</task>
+	
+	<!-- step3:能力开放平台T日数据与浙商运营中心数据对账 -->
+	<task name="checkZjocAlipayAccount" refdubbo="ClearingDubboService"
+		refcomponent="callOnlyInParamsProcedureService">
+		<field key="stepID" value="STEP_0069_251_ACC_795671"/>
+		<transition to="exportZjocFile"/>
+	</task>
+	
+	<!-- step4:导出能力开放平台差异文件 -->
+	<task name="exportZjocFile" refdubbo="FileExportDubboService"
+		refcomponent="fileExportService">
+		<field key="FILE_EXPORT_ID" value="FILE_0069_251_ZJOC_DIFF_643510"/>
+		<transition to="end"/>
+	</task>
+
+	<!-- 流程结束 -->
+	<end name="end" />
+
+</process>

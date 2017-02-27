@@ -32,7 +32,10 @@
                 <value>clearing_cmosp.xml</value>
                 <value>ser_fee_calculate_osp.xml</value>
                 <value>ser_fee_mon_settlement_osp.xml</value>
-
+                
+                <!-- 能力开放平台浙商中心 -->
+				<value>clearing_zjoc.xml</value>
+				
 			</list>
 		</property>
 	</bean>
