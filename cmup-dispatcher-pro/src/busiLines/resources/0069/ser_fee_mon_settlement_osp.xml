@@ -3,25 +3,22 @@
 <process id="Proc_Settlement_Mon_Ser_Fee_Osp" name="Proc_Settlement_Mon_Ser_Fee_Osp">
     <!-- 流程开始 -->
     <start name="start">
-        <transition to="UnReDoSerFeeMonSettlementSuccessfulFlow" />
+        <transition to="OspSerFeeMonSetInitial" />
     </start>
 
-
-    <!-- step1.能力开放平台流程是否已经成功执行过了，执行过了就不执行-->
-    <task name="UnReDoSerFeeMonSettlementSuccessfulFlow" refdubbo="OspDubboService"
-        refcomponent="UnReDoSerFeeMonSettlementSuccessfulFlowService">
-        <transition to="OspSerFeeMonSetInitial" />
-    </task>
-    
-	<!-- step2.服务费月结算初始化：删除当月结算的服务费-->
-    <task name="OspSerFeeMonSetInitial" refdubbo="OspDubboService"
-        refcomponent="OspSerFeeMonSetInitialService">
+	<!-- 服务费月结算初始化：删除当月结算的服务费-->
+    <task name="OspSerFeeMonSetInitial" refdubbo="SettleDubboService"
+        refcomponent="callOnlyInParamsProcedureService">
+		<field key="stepID" value="STEP_0069_MON_SETTLE_INIT_571038" />
+		<field key="processId" value="Proc_Settlement_Mon_Ser_Fee_Osp" />
         <transition to="OspMonthSettlementSerFee" />
     </task>
 
-    <!-- step3.服务费月结算：依次对所有省份进行服务费的月结算-->
-    <task name="OspMonthSettlementSerFee" refdubbo="OspDubboService"
-        refcomponent="OspSerFeeMonSettlementService">
+    <!-- 服务费月结算：依次对所有省份进行服务费的月结算-->
+    <task name="OspMonthSettlementSerFee" refdubbo="SettleDubboService"
+        refcomponent="callOnlyInParamsProcedureService">
+		<field key="stepID" value="STEP_0069_MON_SETTLE_820915" />
+		<field key="taxRate" value="0.06" />
         <transition to="end" />
     </task>
 

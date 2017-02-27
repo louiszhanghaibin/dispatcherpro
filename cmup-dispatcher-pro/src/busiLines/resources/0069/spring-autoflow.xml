@@ -29,13 +29,9 @@
 			<list>
 				<!-- 需要部署的流程定义文件 运行的业务不同，需要部署的流程定义文件也不同-->
                 <!-- 能力开放平台 -->
-                <value>clearing_cmosp.xml</value>
                 <value>ser_fee_calculate_osp.xml</value>
                 <value>ser_fee_mon_settlement_osp.xml</value>
-                
-                <!-- 能力开放平台浙商中心 -->
-				<value>clearing_zjoc.xml</value>
-				
+
 			</list>
 		</property>
 	</bean>
