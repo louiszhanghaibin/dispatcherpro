@@ -3,25 +3,18 @@
 <process id="Proc_Day_Settlement_TMALL" name="Proc_Day_Settlement_TMALL">
     <!-- 流程开始 -->
     <start name="start">
-        <transition to="unReDoTmallDaySettlementSuccessfulFlow" />
-    </start>
-
-    <!-- 天猫商城日结算流程是否已经成功执行过了，执行过了就不执行 -->
-    <task name="unReDoTmallDaySettlementSuccessfulFlow" refdubbo="ProDubboService" refcomponent="unReDoSuccessfulFlowService">
-        <field key="processId" value="Proc_Day_Settlement_TMALL"/>
-        <field key="flowDescKey" value="天猫商城业务日结算"/>
         <transition to="TmallDaySettlementInitial" />
-    </task>
-
+    </start>
+    
     <!-- 天猫商城日结算：检测当日所有省是否完成对账流程，删除日结算表所有该账期日的数据 -->
-    <task name="TmallDaySettlementInitial" refdubbo = "ProDubboService"  refcomponent = "callProcedureDataOutputCanEndTheFlowService">
+    <task name="TmallDaySettlementInitial" refdubbo = "SettleDubboService"  refcomponent = "callProcedureDataOutputCanEndTheFlowService">
         <field key="stepID" value="STEP_0051_DAY_SETTLE_INIT_196121" />
         <field key="processId" value="Proc_Clearing_TMALL"/>
         <transition to = "TmalDaySettlement"/>
     </task>
 
     <!-- 天猫商城日结算：当日所有省完成对账流程之后，依次对所有省份进行日结算 -->
-    <task name="TmalDaySettlement" refdubbo = "ProDubboService" refcomponent = "callOnlyInParamsProcedureService">
+    <task name="TmalDaySettlement" refdubbo = "SettleDubboService" refcomponent = "callOnlyInParamsProcedureService">
         <field key="stepID" value="STEP_0051_DAY_SETTLE_158762" />
         <transition to = "end"/>
     </task>

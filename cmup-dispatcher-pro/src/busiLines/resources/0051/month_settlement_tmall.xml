@@ -3,25 +3,18 @@
 <process id="Proc_Month_Settlement_TMALL" name="Proc_Month_Settlement_TMALL">
     <!-- 流程开始 -->
     <start name="start">
-        <transition to="unReDoTmallMonthSettlementSuccessfulFlow" />
+        <transition to="TmallMonthSettlementInitial" />
     </start>
 
-    <!-- step0: 天猫商城月结算流程是否已经成功执行过了，执行过了就不执行 -->
-    <task name="unReDoTmallMonthSettlementSuccessfulFlow" refdubbo="ProDubboService" refcomponent="unReDoSuccessfulFlowService">
-        <field key="processId" value="Proc_Month_Settlement_TMALL"/>
-        <field key="flowDescKey" value="天猫商城业务月结算"/>
-        <transition to="TmallDaySettlementInitial" />
-    </task>
-
     <!-- step1: 天猫商城月结算：检测当月所有省是否完成对账流程，删除月结算表所有该账期数据 -->
-    <task name="TmallDaySettlementInitial" refdubbo = "ProDubboService"  refcomponent = "callProcedureDataOutputCanEndTheFlowService">
+    <task name="TmallMonthSettlementInitial" refdubbo = "SettleDubboService"  refcomponent = "callProcedureDataOutputCanEndTheFlowService">
         <field key="stepID" value="STEP_0051_MONTH_SETTLE_INIT_156733" />
         <field key="processId" value="Proc_Day_Settlement_TMALL"/>
-        <transition to = "TmalDaySettlement"/>
+        <transition to = "TmalMonthSettlement"/>
     </task>
 
     <!-- step2: 天猫商城月结算：当月所有省完成对账流程之后，依次对所有省份进行月结算 -->
-    <task name="TmalDaySettlement" refdubbo = "ProDubboService" refcomponent = "callOnlyInParamsProcedureService">
+    <task name="TmalMonthSettlement" refdubbo = "SettleDubboService" refcomponent = "callOnlyInParamsProcedureService">
         <field key="stepID" value="STEP_0051_MONTH_SETTLE_146034" />
         <transition to = "end"/>
     </task>
