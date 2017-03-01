@@ -22,7 +22,7 @@
 	</task>
 	
 	<!-- step2： 对账流程数据初始化 -->
-	<task name="initialAccountResultData" refdubbo="ClearingDubboService"
+ 	<task name="initialAccountResultData" refdubbo="ClearingDubboService"
 		refcomponent="callOnlyInParamsProcedureService">
 		<field key="stepID" value="STEP_0069_251_ACC_INIT_895623"/>
 		<transition to="checkZjocAlipayAccount"/>

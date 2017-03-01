@@ -3,7 +3,7 @@
 <process id="Proc_Clearing_CMOSP" name="Proc_Clearing_CMOSP">
 	<!-- 流程开始 -->
 	<start name="start">
-		<transition to="exportOspFile"/>
+		<transition to="grabCMOSPOspFile"/>
 	</start>
 	
 	<!-- step1.1： 获取能力开放平台T日全量文件，并校验入库 -->
