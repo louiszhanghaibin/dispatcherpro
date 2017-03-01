@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--电商直连业务，结算流程，生产环境使用；-->
+<process id="Proc_Day_Settlement_EDB" name="Proc_Day_Settlement_EDB">
+    <!-- 流程开始 -->
+    <start name="start">
+        <transition to="EDBDaySettlementInitial" />
+    </start>
+
+    <!-- 电商直连日结算：检测当日所有省是否完成对账流程，删除日结算表所有该账期日的数据 -->
+    <task name="EDBDaySettlementInitial" refdubbo = "SettleDubboService"  refcomponent = "callProcedureDataOutputCanEndTheFlowService">
+        <field key="stepID" value="STEP_0072_DAY_SETTLE_INIT_196121" />
+        <field key="processId" value="Proc_Clearing_EDB"/>
+        <transition to = "EDBDaySettlement"/>
+    </task>
+
+    <!-- 电商直连日结算：当日所有省完成对账流程之后，依次对所有省份进行日结算 -->
+    <task name="EDBDaySettlement" refdubbo = "SettleDubboService" refcomponent = "callOnlyInParamsProcedureService">
+        <field key="stepID" value="STEP_0072_DAY_SETTLE_158762" />
+        <transition to = "end"/>
+    </task>
+
+    <!-- 流程结束 -->
+    <end name="end" />
+
+</process>

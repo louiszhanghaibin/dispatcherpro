@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--电商直连业务，对账流程，生产环境使用；-->
+<process id="Proc_Clearing_EDB" name="Proc_Clearing_EDB">
+    <!-- 流程开始 -->
+    <start name="start">
+        <transition to="grabEDBFile" />
+    </start>
+
+    <!-- 电商直连文件，校验入库 -->
+    <task name="grabEDBFile" refdubbo = "FileImportingDubboService"  refcomponent = "fileImportingService">
+        <field key="serviceID" value="xxx" />
+        <transition to = "grabBossFile"/>
+    </task>
+
+    <!-- 电商直连省文件，校验入库 -->
+    <task name="grabBossFile" refdubbo = "FileImportingDubboService" refcomponent = "fileImportingService">
+        <field key="serviceID" value="serviceID-20161208-719933" />
+        <transition to = "initEDBAccountResultData"/>
+    </task>
+
+    <!-- 天猫商城对账初始化 -->
+    <task name="initEDBAccountResultData" refdubbo="ClearingDubboService" refcomponent="callOnlyInParamsProcedureService">
+        <field key="stepID" value="STEP_0072_ACC_INIT_395763"/>
+        <transition to="checkEDBAndBossAccount" />
+    </task>
+
+    <!-- 电商直连与省对账 -->
+    <task name="checkEDBAndBossAccount" refdubbo="ClearingDubboService" refcomponent="callOnlyInParamsProcedureService">
+        <field key="stepID" value="STEP_0072_ACC_792714"/>
+        <transition to="exportBossDiffFile" />
+    </task>
+
+    <!-- 导出省差异文件 -->
+    <task name="exportBossDiffFile" refdubbo="FileExportDubboService" refcomponent="fileExportService">
+        <field key="FILE_EXPORT_ID" value="FILE_0072_EDB_BOSS_DIFF_138510"/>
+        <transition to="exportEDBDiffFile" />
+    </task>
+
+    <!-- 导出电商直连差异文件 -->
+    <task name="exportEDBDiffFile" refdubbo="FileExportDubboService" refcomponent="fileExportService">
+        <field key="FILE_EXPORT_ID" value="FILE_0072_EDB_DIFF_571083"/>
+        <transition to="end" />
+    </task>
+
+    <!-- 流程结束 -->
+    <end name="end" />
+
+</process>

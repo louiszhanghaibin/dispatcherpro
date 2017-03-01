@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--电商直连业务，结算流程，生产环境使用；-->
+<process id="Proc_Month_Settlement_EDB" name="Proc_Month_Settlement_EDB">
+    <!-- 流程开始 -->
+    <start name="start">
+        <transition to="EDBMonthSettlementInitial" />
+    </start>
+
+    <!-- step1: 电商直连月结算：检测当月所有省是否完成对账流程，删除月结算表所有该账期数据 -->
+    <task name="EDBMonthSettlementInitial" refdubbo = "SettleDubboService"  refcomponent = "callProcedureDataOutputCanEndTheFlowService">
+        <field key="stepID" value="STEP_0072_MONTH_SETTLE_INIT_156733" />
+        <field key="processId" value="Proc_Day_Settlement_EDB"/>
+        <transition to = "EDBMonthSettlement"/>
+    </task>
+
+    <!-- step2: 电商直连月结算：当月所有省完成对账流程之后，依次对所有省份进行月结算 -->
+    <task name="EDBMonthSettlement" refdubbo = "SettleDubboService" refcomponent = "callOnlyInParamsProcedureService">
+        <field key="stepID" value="STEP_0072_MONTH_SETTLE_146034" />
+        <transition to = "end"/>
+    </task>
+
+    <!-- 流程结束 -->
+    <end name="end" />
+
+</process>
