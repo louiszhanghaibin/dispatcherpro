@@ -34,7 +34,9 @@
                 <value>ser_fee_mon_settlement_osp.xml</value>
                 
                  <!-- 能力开放平台浙商中心 -->
-                <value>clearing_zjoc.xml</value>
+                 <value>clearing_zjoc.xml</value> 
+                 <value>clearing_zjocrefd.xml</value> 
+                <value>clearing_cmosp_adjust.xml</value>
 
 			</list>
 		</property>
