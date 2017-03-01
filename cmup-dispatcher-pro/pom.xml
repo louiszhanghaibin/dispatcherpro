@@ -16,6 +16,8 @@
 
 		<server.name>tomcat</server.name>
 		<server.version>7.0.59</server.version>
+
+		<tool-tomcat-package.version>0.0.1-SNAPSHOT</tool-tomcat-package.version>
   </properties>
   
   <dependencies>
@@ -447,7 +449,7 @@
 
 				</plugin>
 
-				<!-- 拷贝tomcat 并解压 -->
+				<!-- 拷贝tomcat，压缩工具包 并解压 -->
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-dependency-plugin</artifactId>
@@ -466,6 +468,25 @@
 										<groupId>org.apache.tomcat</groupId>
 										<artifactId>${server.name}</artifactId>
 										<version>${server.version}</version>
+										<type>tar.gz</type>
+									</artifactItem>
+								</artifactItems>
+							</configuration>
+						</execution>
+						
+						<execution>
+							<id>unpackTomcatPackage</id>
+							<phase>prepare-package</phase>
+							<goals>
+								<goal>unpack</goal>
+							</goals>
+							<configuration>
+								<outputDirectory>${project.build.directory}</outputDirectory>
+								<artifactItems>
+									<artifactItem>
+										<groupId>com.china.mobile.tool</groupId>
+										<artifactId>tool-tomcat-package</artifactId>
+										<version>${tool-tomcat-package.version}</version>
 										<type>tar.gz</type>
 									</artifactItem>
 								</artifactItems>
@@ -512,12 +533,22 @@
 									<delete file="${project.build.directory}/apache-${server.name}-${server.version}/webapps/${project.artifactId}.war">
 									</delete>
 									
+									<copy
+										todir="${project.build.directory}/apache-${server.name}-${server.version}/"
+										encoding="utf-8">
+										<fileset dir="${project.build.directory}/tool-tomcat-package">
+											<include name="*.*" />
+										</fileset>
+										<fileset dir="${project.build.directory}/classes/">
+											<include name="smartcnf.ini" />
+										</fileset>
+									</copy>
+									
 									<tar destfile="${project.build.directory}/${artifactId}.tar.gz"
 										compression="gzip" basedir="${project.build.directory}"
 										includes="apache-${server.name}-${server.version}/**">
 									</tar>
-									<!-- <move todir="./target\classes"> <fileset dir="../xpay-common/target/classes" 
-										/> </move> -->
+
 								</target>
 							</configuration>
 							<goals>
