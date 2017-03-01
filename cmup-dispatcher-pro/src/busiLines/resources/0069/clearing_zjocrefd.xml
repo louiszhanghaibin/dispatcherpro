@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--能力开放平台，文件校验入库流程，仅仅用作测试流程使用-->
+<process id="Proc_Clearing_ZJOCERFD" name="Proc_Clearing_ZJOCERFD">
+	<!-- 流程开始 -->
+	<start name="start">
+		<transition to="zjocrefdFile" />
+	</start>
+
+	<!-- step1.1：校验浙商退费文件 -->
+	<task name="zjocrefdFile" refdubbo="FileImportingDubboService"
+		refcomponent="fileImportingService">
+		<field key="serviceID" value="0069_ZJOC_REFD" />
+		<transition to="end" />
+	</task>
+	<!-- 流程结束 -->
+	<end name="end" />
+
+</process>

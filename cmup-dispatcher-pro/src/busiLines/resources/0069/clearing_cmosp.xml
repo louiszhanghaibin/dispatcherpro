@@ -9,21 +9,21 @@
 	<!-- step1.1： 获取能力开放平台T日全量文件，并校验入库 -->
 	<task name="grabCMOSPOspFile" refdubbo = "FileImportingDubboService"
 		refcomponent = "fileImportingService">
-		<field key="serviceID" value="serviceID-20170223-175549" />
+		<field key="serviceID" value="0069_OSP" />
 		<transition to = "grabCMOSPAlipayFile"/>
 	</task>
 	
 	<!-- step1.2： 获取支付宝T日全量文件，并校验入库 -->
 	<task name="grabCMOSPAlipayFile" refdubbo = "FileImportingDubboService"
 		refcomponent = "fileImportingService">
-		<field key="serviceID" value="serviceID-20170223-141717" />
+		<field key="serviceID" value="0069_ALIPAY" />
 		<transition to = "cmospUnionpay"/>
 	</task>	
     
 	<!-- step1.3: 获取银联日全量文件，并校验入库 -->
     <task name="cmospUnionpay" refdubbo="FileImportingDubboService"
         refcomponent="fileImportingService">
-        <field key="serviceID" value="serviceID-20170223-173333" />
+        <field key="serviceID" value="0069_UNIONPAY" />
         <transition to="initialAccountResultData"/>
     </task>
     

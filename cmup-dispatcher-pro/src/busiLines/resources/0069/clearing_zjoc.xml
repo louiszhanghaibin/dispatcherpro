@@ -9,7 +9,7 @@
 	<!-- step1.1：校验能力开放平台对账文件 -->
 	<task name="cmospFileValidate" refdubbo="FileImportingDubboService"
 		refcomponent="fileImportingService">
-		<field key="serviceID" value="serviceID-20170223-163333" />
+		<field key="serviceID" value="0069_OSP" />
 		<field key="busiLine" value="0069"></field>
 		<transition to="zjocFileValidate" />
 	</task>
@@ -17,7 +17,7 @@
 	<!-- step1.2：校验浙商对账文件-->
 	<task name="zjocFileValidate" refdubbo="FileImportingDubboService"
 		refcomponent="fileImportingService">
-		<field key="serviceID" value="serviceID-20170223-172222" />
+		<field key="serviceID" value="0069_ZJOC" />
 		<transition to="initialAccountResultData" />
 	</task>
 	

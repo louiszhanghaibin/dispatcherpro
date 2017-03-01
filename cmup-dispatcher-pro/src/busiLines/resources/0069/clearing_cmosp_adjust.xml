@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 能力开放平台业务，调账调差对账文件解析入库，测试用 -->
+<process id="Proc_Clearing_CMOSP_Adjust" name="Proc_Clearing_CMOSP_Adjust">
+	<!-- 流程开始 -->
+	<start name="start">
+		<transition to="cmospAdjust"/>
+	</start>
+	
+	<!-- 校验调账调差文件 -->
+	<task name="cmospAdjust" refdubbo="FileImportingDubboService"
+		refcomponent="fileImportingService">
+		<field key="serviceID" value="0069_ZJOC_REFD" />
+		<transition to="end" />
+	</task>
+	
+	<!-- 流程结束 -->
+	<end name="end"/>
+</process>
