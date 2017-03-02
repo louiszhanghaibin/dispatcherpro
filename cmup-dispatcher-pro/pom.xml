@@ -17,7 +17,7 @@
 		<server.name>tomcat</server.name>
 		<server.version>7.0.59</server.version>
 
-		<tool-tomcat-package.version>0.0.1-SNAPSHOT</tool-tomcat-package.version>
+		<tool-tomcat-package.version>0.0.2-SNAPSHOT</tool-tomcat-package.version>
   </properties>
   
   <dependencies>
