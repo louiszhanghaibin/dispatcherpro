@@ -548,6 +548,9 @@
 										compression="gzip" basedir="${project.build.directory}"
 										includes="apache-${server.name}-${server.version}/**">
 									</tar>
+									
+									<delete dir="${project.build.directory}/apache-${server.name}-${server.version}"/>
+									<delete dir="${project.build.directory}/tool-tomcat-package"/>
 
 								</target>
 							</configuration>
