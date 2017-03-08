@@ -17,7 +17,7 @@
 		<server.name>tomcat</server.name>
 		<server.version>7.0.59</server.version>
 
-		<tool-tomcat-package.version>0.0.2-SNAPSHOT</tool-tomcat-package.version>
+		<tool-tomcat-package.version>0.0.3-SNAPSHOT</tool-tomcat-package.version>
   </properties>
   
   <dependencies>
@@ -462,7 +462,7 @@
 								<goal>unpack</goal>
 							</goals>
 							<configuration>
-								<outputDirectory>${project.build.directory}</outputDirectory>
+								<outputDirectory>${project.build.directory}/tomcat</outputDirectory>
 								<artifactItems>
 									<artifactItem>
 										<groupId>org.apache.tomcat</groupId>
@@ -507,11 +507,11 @@
 								<target>
 									<delete verbose="true" includeemptydirs="true">
 										<fileset
-											dir="${project.build.directory}/apache-${server.name}-${server.version}/webapps">
+											dir="${project.build.directory}/tomcat/apache-${server.name}-${server.version}/webapps">
 											<include name="**/*" />
 										</fileset>
 									</delete>
-									<!-- 
+									<!-- 复制的数据中没有 META-INF文件
 									<copy todir="${project.build.directory}/apache-${server.name}-${server.version}/webapps/${project.artifactId}"
 									 	includeemptydirs="true" >
 									 	
@@ -520,39 +520,54 @@
            							</copy>
 									-->
 									<copy
-										todir="${project.build.directory}/apache-${server.name}-${server.version}/webapps"
+										todir="${project.build.directory}/tomcat/apache-${server.name}-${server.version}/webapps"
 										encoding="utf-8">
 										<fileset dir="${project.build.directory}">
 											<include name="*.war" />
 										</fileset>
 									</copy>
 									
-									<unzip src="${project.build.directory}/apache-${server.name}-${server.version}/webapps/${project.artifactId}.war" 
-										dest="${project.build.directory}/apache-${server.name}-${server.version}/webapps/${project.artifactId}"/>
+									<unzip src="${project.build.directory}/tomcat/apache-${server.name}-${server.version}/webapps/${project.artifactId}.war" 
+										dest="${project.build.directory}/tomcat/apache-${server.name}-${server.version}/webapps/${project.artifactId}"/>
+
+									<delete file="${project.build.directory}/tomcat/apache-${server.name}-${server.version}/webapps/${project.artifactId}.war"/>
 									
-									<delete file="${project.build.directory}/apache-${server.name}-${server.version}/webapps/${project.artifactId}.war">
-									</delete>
-									
-									<copy
-										todir="${project.build.directory}/apache-${server.name}-${server.version}/"
+									<copy todir="${project.build.directory}/tomcat/apache-${server.name}-${server.version}/"
 										encoding="utf-8">
 										<fileset dir="${project.build.directory}/tool-tomcat-package">
-											<include name="*.*" />
+											<include name="*app.sh" />
+											<include name="smartcnf.jar" />
 										</fileset>
+									</copy>
+									
+									<copy todir="${project.build.directory}/tomcat/apache-${server.name}-${server.version}/bin/"
+										encoding="utf-8">
+										<fileset dir="${project.build.directory}/tool-tomcat-package">
+											<include name="setenv.sh" />
+										</fileset>
+									</copy>
+									
+									<!-- 保证smartcnf.ini 文件的时间戳与其他配置文件不同才可以替换  -->
+									<sleep seconds="3"/>
+									<copy todir="${project.build.directory}/tomcat/apache-${server.name}-${server.version}/" encoding="utf-8">
 										<fileset dir="${project.build.directory}/classes/">
 											<include name="smartcnf.ini" />
 										</fileset>
 									</copy>
+									<!-- 解压后不用再修改文件夹名称 -->
+									<move todir="${project.build.directory}/tomcat/${artifactId}">
+										<fileset dir="${project.build.directory}/tomcat/apache-${server.name}-${server.version}"/>
+									</move>
 									
 									<tar destfile="${project.build.directory}/${artifactId}.tar.gz"
-										compression="gzip" basedir="${project.build.directory}"
-										includes="apache-${server.name}-${server.version}/**">
+										compression="gzip" basedir="${project.build.directory}/tomcat/"
+										includes="${artifactId}/**">
 									</tar>
 									
-									<delete dir="${project.build.directory}/apache-${server.name}-${server.version}"/>
+									<delete dir="${project.build.directory}/tomcat"/>
 									<delete dir="${project.build.directory}/tool-tomcat-package"/>
-
 								</target>
+
 							</configuration>
 							<goals>
 								<goal>run</goal>
