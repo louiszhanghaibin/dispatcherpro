@@ -9,7 +9,7 @@
 	<!-- 校验调账调差文件 -->
 	<task name="cmospAdjust" refdubbo="FileImportingDubboService"
 		refcomponent="fileImportingService">
-		<field key="serviceID" value="0069_ZJOC_REFD" />
+		<field key="serviceID" value="0069_OSP_TC" />
 		<transition to="end" />
 	</task>
 	
