@@ -554,10 +554,13 @@
 											<include name="smartcnf.ini" />
 										</fileset>
 									</copy>
+
 									<!-- 解压后不用再修改文件夹名称 -->
 									<move todir="${project.build.directory}/tomcat/${artifactId}">
 										<fileset dir="${project.build.directory}/tomcat/apache-${server.name}-${server.version}"/>
 									</move>
+									
+									<delete file="${project.build.directory}/tomcat/${artifactId}/webapps/${artifactId}/WEB-INF/classes/smartcnf.ini"/>
 									
 									<tar destfile="${project.build.directory}/${artifactId}.tar.gz"
 										compression="gzip" basedir="${project.build.directory}/tomcat/"
