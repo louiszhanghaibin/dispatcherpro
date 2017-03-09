@@ -413,9 +413,81 @@
 				</plugin>
 				
 				<plugin>
+					<groupId>pl.project13.maven</groupId>
+					<artifactId>git-commit-id-plugin</artifactId>
+					<version>2.2.2</version>
+					<executions>
+						<execution>
+							<goals>
+								<goal>revision</goal>
+							</goals>
+						</execution>
+					</executions>
+					<configuration>
+						<!--日期格式;默认值:dd.MM.yyyy '@' HH:mm:ss z;-->
+						<dateFormat>yyyyMMddHHmmss</dateFormat>
+						<!--,构建过程中,是否打印详细信息;默认值:false;-->
+						<verbose>true</verbose>
+						<!-- ".git"文件路径;默认值:${project.basedir}/.git; -->
+						<dotGitDirectory>${project.basedir}/../.git</dotGitDirectory>
+						<!--若项目打包类型为pom,是否取消构建;默认值:true;-->
+						<skipPoms>false</skipPoms>
+						<!--是否生成"git.properties"文件;默认值:false;-->
+						<generateGitPropertiesFile>true</generateGitPropertiesFile>
+						<!--指定"git.properties"文件的存放路径(相对于${project.basedir}的一个路径);-->
+						<generateGitPropertiesFilename>target/git/git-version.properties</generateGitPropertiesFilename>
+						<!--".git"文件夹未找到时,构建是否失败;若设置true,则构建失败;若设置false,则跳过执行该目标;默认值:true;-->
+						<failOnNoGitDirectory>false</failOnNoGitDirectory>
+						<includeOnlyProperties>
+							<includeOnlyProperty>git.branch</includeOnlyProperty>
+							<includeOnlyProperty>git.closest.tag.name</includeOnlyProperty>
+							<includeOnlyProperty>git.commit.id.full</includeOnlyProperty>
+							<includeOnlyProperty>git.commit.time</includeOnlyProperty>
+							<includeOnlyProperty>git.commit.user.name</includeOnlyProperty>
+							<includeOnlyProperty>git.commit.user.email</includeOnlyProperty>
+							<includeOnlyProperty>git.commit.message.full</includeOnlyProperty>
+						</includeOnlyProperties>
+						<!--git描述配置,可选;由JGit提供实现;-->
+						<gitDescribe>
+							<!--是否生成描述属性-->
+							<skip>false</skip>
+							<!--提交操作未发现tag时,仅打印提交操作ID,-->
+							<always>false</always>
+							<!--提交操作ID显式字符长度,最大值为:40;默认值:7;0代表特殊意义; -->
+							<abbrev>7</abbrev>
+							<!--构建触发时,代码有修改时(即"dirty state"),添加指定后缀;默认值:"";-->
+							<dirty>-dirty</dirty>
+							<!--always print using the "tag-commits_from_tag-g_commit_id-maybe_dirty" format, even if "on" a tag.
+								The distance will always be 0 if you're "on" the tag.
+							-->
+							<forceLongFormat>false</forceLongFormat>
+						</gitDescribe>
+					</configuration>
+				</plugin>
+				
+				<!-- 
+				http://maven.apache.org/plugins/maven-war-plugin/
+				http://maven.apache.org/plugins/maven-war-plugin/examples/war-manifest-guide.html
+				http://maven.apache.org/shared/maven-archiver/index.html
+				 -->
+				<plugin>
 		        	<groupId>org.apache.maven.plugins</groupId>
 	                <artifactId>maven-war-plugin</artifactId>
 	                <version>2.2</version>
+	                <configuration>
+		                <archive>
+			                <manifest>
+				                <addClasspath>true</addClasspath>
+				                <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+				                <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
+				                <useUniqueVersions>true</useUniqueVersions>
+			                </manifest>
+			                <manifestEntries>
+			                	<git-commit-id>${git.commit.id.full}</git-commit-id>
+			                	<git-commit-time>${git.commit.time}</git-commit-time>
+			                </manifestEntries>
+		                </archive>
+	                </configuration>
 		        </plugin>
 
 				<plugin>
@@ -473,7 +545,6 @@
 								</artifactItems>
 							</configuration>
 						</execution>
-						
 						<execution>
 							<id>unpackTomcatPackage</id>
 							<phase>prepare-package</phase>
@@ -511,7 +582,7 @@
 											<include name="**/*" />
 										</fileset>
 									</delete>
-									<!-- 复制的数据中没有 META-INF文件
+									<!-- 复制的数据中没有 META-INF文件，所以不要用复制
 									<copy todir="${project.build.directory}/apache-${server.name}-${server.version}/webapps/${project.artifactId}"
 									 	includeemptydirs="true" >
 									 	
@@ -539,6 +610,13 @@
 											<include name="smartcnf.jar" />
 										</fileset>
 									</copy>
+									<!-- copy失败，不影响打包 -->
+									<copy todir="${project.build.directory}/tomcat/apache-${server.name}-${server.version}/"
+										encoding="utf-8" failonerror="false">
+										<fileset dir="${project.build.directory}/git">
+											<include name="git-version.properties" />
+										</fileset>
+									</copy>
 									
 									<copy todir="${project.build.directory}/tomcat/apache-${server.name}-${server.version}/bin/"
 										encoding="utf-8">
@@ -546,7 +624,6 @@
 											<include name="setenv.sh" />
 										</fileset>
 									</copy>
-									
 									<!-- 保证smartcnf.ini 文件的时间戳与其他配置文件不同才可以替换  -->
 									<sleep seconds="3"/>
 									<copy todir="${project.build.directory}/tomcat/apache-${server.name}-${server.version}/" encoding="utf-8">
@@ -567,8 +644,11 @@
 										includes="${artifactId}/**">
 									</tar>
 									
+									<!-- 删除失败，不影响打包 -->
+									<delete dir="${project.build.directory}/git" failonerror="false"/>
 									<delete dir="${project.build.directory}/tomcat"/>
 									<delete dir="${project.build.directory}/tool-tomcat-package"/>
+
 								</target>
 
 							</configuration>
