@@ -23,7 +23,7 @@
 		
 	<bean id="processXMLFileLoader" class="cmsz.autoflow.engine.cfg.ProcessXMLFileLoader"	init-method="load">
 		<!-- override 为true，程序启动时会自动覆盖数据库中以后的记录 -->
-		<property name="override" value="true"/>
+		<property name="override" value="${autoflow.flow.override}"/>
 		<property name="files">
 			<list>
 				<!-- 需要部署的流程定义文件 运行的业务不同，需要部署的流程定义文件也不同-->
