@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--咪咕充值业务，对账流程流程，生产环境使用； -->
+<!--咪咕充值业务，解析流程，测试环境使用； -->
 <process id="Proc_Clearing_Migu_Test" name="Proc_Clearing_Migu_Test">
 	<!-- 流程开始 -->
 	<start name="start">
