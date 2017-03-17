@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--咪咕充值业务，月结算流程，生产环境或测试环境使用；-->
+<process id="Proc_Settle_Month_Migu" name="Proc_Settle_Month_Migu">
+    <!-- 流程开始 -->
+    <start name="start">
+        <transition to="MGMonthSettlementInit" />
+    </start>
+
+    <!--详单结算初始化（删除日详单数据）-->
+    <task name="MGMonthSettlementInit" refdubbo="SettleDubboService" refcomponent="callProcedureDataOutputCanEndTheFlowService">
+        <field key="stepID" value="STEP_0064_SETT_940048"/>
+        <!--日结算流程ID，用于判断当月日结算是否均完成-->
+        <field key="processID" value="Proc_Settle_Day_Migu"/>
+        <transition to="MGSerFeeSettlement"/>
+    </task>
+
+    <!--服务费月结算-->
+    <task name="MGSerFeeSettlement" refdubbo="SettleDubboService" refcomponent="callOnlyInParamsProcedureService">
+        <field key="stepID" value="STEP_0064_SETT_947799"/>
+        <!--税率，默认0.06-->
+        <field key="taxRate" value="0.06"/>
+        <transition to="MGChargeMoneySettlement"/>
+    </task>
+
+    <!--用户资金月结算-->
+    <task name="MGChargeMoneySettlement" refdubbo="SettleDubboService" refcomponent="callOnlyInParamsProcedureService">
+        <field key="stepID" value="STEP_0064_SETT_963216"/>
+        <!--税率，默认0.06-->
+        <field key="taxRate" value="0.06"/>
+        <transition to="end"/>
+    </task>
+
+    <!-- 流程结束 -->
+    <end name="end" />
+
+</process>
