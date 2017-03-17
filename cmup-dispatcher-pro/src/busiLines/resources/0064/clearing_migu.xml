@@ -30,7 +30,7 @@
 		<transition to="MGAccountInit"/>
 	</task>
 
-	<!--对账初始化-->
+	<!--对账初始化（删除咪咕平账数据、省差异数据）-->
 	<task name="MGAccountInit" refdubbo="ClearingDubboService" refcomponent="callOnlyInParamsProcedureService">
 		<field key="stepID" value="STEP_0064_ACC_905881"/>
 		<transition to="checkMissAccountByUpay"/>

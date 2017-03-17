@@ -6,7 +6,7 @@
         <transition to="MGMonthSettlementInit" />
     </start>
 
-    <!--详单结算初始化（删除日详单数据）-->
+    <!--详单结算初始化（删除资金结算表、服务费结算表数据）-->
     <task name="MGMonthSettlementInit" refdubbo="SettleDubboService" refcomponent="callProcedureDataOutputCanEndTheFlowService">
         <field key="stepID" value="STEP_0064_SETT_940048"/>
         <!--日结算流程ID，用于判断当月日结算是否均完成-->
