@@ -330,7 +330,7 @@
 	<dependency>
 		<groupId>com.cmsz.cmup</groupId>
 		<artifactId>cmup-autoflow-pro</artifactId>
-		<version>0.0.1-SNAPSHOT</version>
+		<version>0.0.2-SNAPSHOT</version>
 	</dependency>
 
     <dependency>
