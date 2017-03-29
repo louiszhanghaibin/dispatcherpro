@@ -32,8 +32,6 @@
 				<value>clearing_migu.xml</value>
                 <value>day_settlement_migu.xml</value>
                 <value>month_settlement_migu.xml</value>
-                <value>test_migu.xml</value>
-
 			</list>
 		</property>
 	</bean>
